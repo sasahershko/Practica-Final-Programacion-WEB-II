@@ -3,7 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 //INDEX.JS
-const router = require('./routes/index.js')
+const router = require('./routes/index')
 
 
 const dbConnect = require('./config/mongodb');
@@ -17,9 +17,9 @@ app.use(express.json()); //para poder utilizar directamente el req.body en forma
 app.use('/api', router);
 
 //PARA EL STORAGE
-app.use(express.static('storage')); // publicame esta carpeta para que sea accesible desde el navegador
+// app.use(express.static('storage')); // publicame esta carpeta para que sea accesible desde el navegador
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
     console.log('Servidor escuchando en el puerto ' , port);  
