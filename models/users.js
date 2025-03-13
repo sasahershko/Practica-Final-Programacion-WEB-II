@@ -19,7 +19,7 @@ const UserScheme = new mongoose.Schema({
         type: String,
     },
     code:{
-        type: Number
+        type: String
     },
     tries:{
         type: Number,

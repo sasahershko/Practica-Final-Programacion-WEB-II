@@ -1,9 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const {validatorCreateItem, validatorGetItem} = require('../validators/users');
-const {getUsers, createUser} = require('../controllers/users');
+const {getUsers, getUser, createUser, updateUser, deleteUser, updateRole} = require('../controllers/users');
+
+const {checkRole} = require('../middleware/role');
+const {authMiddleware} = require('../middleware/session');
 
 router.get('/', getUsers);
-router.post('/', validatorCreateItem, createUser)
+router.get('/:id', validatorGetItem, getUser);
+router.post('/',validatorCreateItem, createUser);
+router.put('/:id', authMiddleware, updateUser);
+router.put('/role/:id', authMiddleware, checkRole(['admin']), updateRole);
+router.delete('/:id', deleteUser);
+
 
 module.exports = router;

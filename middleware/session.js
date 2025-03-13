@@ -9,10 +9,10 @@ const authMiddleware = async(req, res, next) =>{
             handleHttpError(res, 'NOT_TOKEN', 401);
             return
         }
-        //nos llega la palabra reservada bearer y el token, asi que me quedo ocn la ultima parte
+        
         const token = req.headers.authorization.split(' ').pop();
 
-        //del token, miramos en payload (revisar verifytoken de utils/handlejwt)
+       
         const dataToken = verifyToken(token);
 
         if(!dataToken._id){
@@ -21,8 +21,7 @@ const authMiddleware = async(req, res, next) =>{
         }
 
         const user = await usersModel.findById(dataToken._id);
-        req.user = user; //inyecto al user en la petición
-
+        req.user = user; 
         next()
     } catch (error) {   
         handleHttpError(res, 'NOT_SESSION', 401)

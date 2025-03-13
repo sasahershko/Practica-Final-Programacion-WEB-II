@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET;
 
+
 const tokenSign = (user) =>{
     const sign = jwt.sign(
         {
@@ -9,7 +10,7 @@ const tokenSign = (user) =>{
         },
     JWT_SECRET,
     {
-        expiresIn:'2d'
+        expiresIn:'2h'
     }
     )
     return sign;

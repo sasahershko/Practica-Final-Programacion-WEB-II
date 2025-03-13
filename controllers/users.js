@@ -1,26 +1,64 @@
-const {usersModel} = require('../models');
+const { usersModel } = require('../models');
+const { handleHttpError } = require('../utils/handleHttpError');
 const { matchedData } = require('express-validator');
 
-const getUsers = async (req, res) =>{
+const getUsers = async (req, res) => {
+
     try {
-        // const data = await tracksModel.find({});  
-        console.log('holi');      ;
+        const data = await tracksModel.find({});
+        res.send({ data });
     } catch (error) {
-        console.log(error);
+        handleHttpError(res, 'ERROR_GET_ITEMS');
     }
-};
+}
+
+const getUser = async (req, res) => {
+    const { id } = req.params;
+    res.send({ message: 'Devolviendo usuario...' }, id);
+}
+
 
 const createUser = async (req, res) => {
     try {
-        const  {body}  = matchedData(req);
+        const { body } = matchedData(req);
 
         const data = await usersModel.create(body);
         res.json({ data });
     } catch (error) {
-        // handleHttpError(res, 'ERROR_CREATE_ITEMS');
-        console.log(error);
+        handleHttpError(res, 'ERROR_CREATE_ITEMS');
     }
 }
 
 
-module.exports = {getUsers, createUser}
+const updateUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { body } = matchedData(req);
+        const data = await usersModel.findOneAndUpdate({ _id: id }, body, { new: true });
+        res.json({ data });
+    } catch (error) {
+        handleHttpError(res, 'ERROR_UPDATE_ITEMS');
+    }
+}
+
+
+const updateRole = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const role  = req.user.role;
+        const data = await usersModel.findOneAndUpdate({ _id: id }, { role }, { new: true });
+        res.json({ data });
+    } catch (error) {
+        handleHttpError(res, 'ERROR_UPDATE_ROLE');
+    }
+}
+
+const deleteUser = async (req, res) => {
+    const { id } = req.params;
+    const data = await usersModel.findOneAndDelete(id);
+
+    res.json({ data });
+}
+
+
+module.exports = { getUsers, getUser, createUser, updateUser, deleteUser, updateRole };

@@ -11,6 +11,9 @@ const register =  async(req, res) =>{
     const dataUser = await usersModel.create(body);
     dataUser.set('password', undefined, {strict: false});
 
+    const code = Math.floor(100000 + Math.random() * 999999).toString();
+    dataUser = await usersModel.findByIdAndUpdate();
+
     const data ={
         token: tokenSign(dataUser),
         user: dataUser
