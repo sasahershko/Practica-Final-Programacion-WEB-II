@@ -15,14 +15,21 @@ const authMiddleware = async(req, res, next) =>{
        
         const dataToken = verifyToken(token);
 
-        if(!dataToken._id){
+        if(!dataToken || !dataToken._id){
             handleHttpError(res, 'ERROR_ID_TOKEN', 401)
             return
         }
 
         const user = await usersModel.findById(dataToken._id);
+
+        if(!user){
+            handleHttpError(res, 'USER_NOT_EXISTS', 404);
+            return;
+        }
+
+
         req.user = user; 
-        next()
+        next();
     } catch (error) {   
         handleHttpError(res, 'NOT_SESSION', 401)
     }

@@ -16,13 +16,15 @@ const UserScheme = new mongoose.Schema({
         default: 'user'
     },
     state:{
-        type: String,
+        type: Boolean,
+        default: false
     },
     code:{
         type: String
     },
     tries:{
         type: Number,
+        default: 3
     }
 
 },

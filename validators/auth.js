@@ -3,21 +3,38 @@ const validateResults = require("../utils/handleValidator");
 
 
 const validatorRegister = [
-    // check("name").exists().notEmpty().isLength( {min:3, max: 99} ),
-    // check("age").exists().notEmpty().isNumeric(),
-    check("email").exists().notEmpty().isEmail(),
-    check("password").exists().notEmpty().isLength( {min:8, max: 16} ),
-        (req, res, next) => {
-            return validateResults(req, res, next)
-        }
+    check('email')
+        .exists().withMessage('Email es requerido')
+        .bail()
+        .notEmpty().withMessage('Email no puede estar vacío')
+        .bail()
+        .isEmail().withMessage('Formato de email inválido'),
+    check('password')
+        .exists().withMessage('Contraseña requerida')
+        .bail()
+        .notEmpty().withMessage('Contraseña no puede estar vacía')
+        .bail()
+        .isLength({ min: 8 }).withMessage('La contraseña debe tener mínimo 8 caracteres'),
+    (req, res, next) => {
+        delete req.body.state; //(en caso de que alguien intentara forzar un state en el post para validar el mail)
+        return validateResults(req, res, next)
+    }
 ];
 
 const validatorLogin = [
-    check("email").exists().notEmpty().isEmail(),
-    check("password").exists().notEmpty().isLength( {min:8, max: 16} ),
-        (req, res, next) => {
-            return validateResults(req, res, next)
-        }
+    check('email')
+        .exists().withMessage('Email es requerido')
+        .bail()
+        .notEmpty().withMessage('Email no puede estar vacío')
+        .bail()
+        .isEmail().withMessage('Formato de email inválido'),
+    check('password')
+        .exists().withMessage('Contraseña requerida')
+        .bail()
+        .notEmpty().withMessage('Contraseña no puede estar vacía'),
+    (req, res, next) => {
+        return validateResults(req, res, next)
+    }
 ];
 
 module.exports = { validatorRegister, validatorLogin }
