@@ -48,16 +48,47 @@ const validatorPersonalData = [
 ]
 
 const validatorCompanyData = [
-    check('company').exists().withMessage('La compañía es requerida'),
-    check('company.name').optional().notEmpty(),
-    check('company.cif').optional().notEmpty(),
-    check('company.street').optional().notEmpty(),
-    check('company.number').optional().isNumeric(),
-    check('company.postal').optional().isNumeric(),
-    check('company.city').optional().notEmpty(),
-    check('company.province').optional().notEmpty(),
+    check('company.name')
+        .exists().withMessage('El nombre de la empresa es requerido')
+        .bail()
+        .notEmpty().withMessage('El nombre de la empresa no puede estar vacío'),
+
+    check('company.cif')
+        .exists().withMessage('El CIF es requerido')
+        .bail()
+        .notEmpty().withMessage('El CIF no puede estar vacío')
+        .bail()
+        .matches(/^[A-Za-z]\d{8}$/).withMessage('Formato de CIF inválido (ej: B12345678)'),
+
+    check('company.street')
+        .exists().withMessage('La dirección es requerida')
+        .bail()
+        .notEmpty().withMessage('La dirección no puede estar vacía'),
+
+    check('company.number')
+        .exists().withMessage('El número es requerido')
+        .bail()
+        .isNumeric().withMessage('El número debe ser un valor numérico'),
+
+    check('company.postal')
+        .exists().withMessage('El código postal es requerido')
+        .bail()
+        .isNumeric().withMessage('El código postal debe ser numérico')
+        .bail()
+        .matches(/^\d{5}$/).withMessage('El código postal debe tener 5 cifras'),
+
+    check('company.city')
+        .exists().withMessage('La ciudad es requerida')
+        .bail()
+        .notEmpty().withMessage('La ciudad no puede estar vacía'),
+
+    check('company.province')
+        .exists().withMessage('La provincia es requerida')
+        .bail()
+        .notEmpty().withMessage('La provincia no puede estar vacía'),
+
     validateResults
-]
+];
 
 
 module.exports = { validatorCreateItem, validatorGetItem, validatorPersonalData, validatorCompanyData }
