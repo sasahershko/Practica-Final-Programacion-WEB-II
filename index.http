@@ -27,7 +27,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlYTg3N
     "password": "12345678"
 }
 
-###*4) ON BOARDING
+###*4) PUT
 PUT http://localhost:5000/api/users/register
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlYTg3NDNlNjgzZWRmODRjYTA3ZWQiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY0NTM5NCwiZXhwIjoxNzQyNjUyNTk0fQ.IiJC7Ab6vTN9fSRgLZqvKB9rIYUFUux6JnnJL046anU
@@ -37,4 +37,21 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlYTg3N
     "name" : "sasa",
     "surnames" : "hershko",
     "nif" : "12345678Z"
+}
+
+###* 4) PATCH
+PATCH http://localhost:5000/api/users/company
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlYTg3NDNlNjgzZWRmODRjYTA3ZWQiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY0NTM5NCwiZXhwIjoxNzQyNjUyNTk0fQ.IiJC7Ab6vTN9fSRgLZqvKB9rIYUFUux6JnnJL046anU
+
+{
+   "company": {
+      "name": "PRUEBA NOMBRE",
+      "cif": "PRUEBA CIF",
+      "street": "PRUEBA STREET",
+      "number": 1,
+      "postal": 12345,
+      "city": "PRUEBA CITY",
+      "province": "PRUEBA PROVINCIA"
+    }
 }
