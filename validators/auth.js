@@ -16,7 +16,7 @@ const validatorRegister = [
         .bail()
         .isLength({ min: 8 }).withMessage('La contraseña debe tener mínimo 8 caracteres'),
     (req, res, next) => {
-        delete req.body.state; //(en caso de que alguien intentara forzar un state en el post para validar el mail)
+        delete req.body.verified; //(en caso de que alguien intentara forzar un state en el post para validar el mail)
         return validateResults(req, res, next)
     }
 ];

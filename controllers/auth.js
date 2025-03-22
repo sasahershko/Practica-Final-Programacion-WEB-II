@@ -2,7 +2,10 @@ const express = require('express');
 const { matchedData } = require('express-validator');
 const { encrypt, compare } = require('../utils/handlePassword');
 const { usersModel } = require('../models');
-const { tokenSign, verifyToken } = require('../utils/handleJwt')
+const { tokenSign, verifyToken } = require('../utils/handleJwt');
+
+//para que no devuelva ciertos campos
+const { minimalUser } = require('../utils/sanitizers');
 
 const register = async (req, res) => {
     // extraemos solo los campos validados
@@ -21,23 +24,16 @@ const register = async (req, res) => {
     const code = Math.floor(100000 + Math.random() * 999999).toString();
     const tries = 3;
 
-    // dataUser = await usersModel.findByIdAndUpdate(); -> ESTO ESTABA EN LA PRÁCTICA QUE HEMOS HECHO EN CLASE
-
     // construimos cuerpo con datos para crear usuario 
     const body = { ...req, password: passwordHash, code};
 
     //creamos usuario en la base de datos
     const dataUser = await usersModel.create(body);
 
-    // OCULTAR (se puede hacer de esta forma o de la de verifyEmail, no se cuál es la correcta(?))
-    dataUser.set('tries', undefined, {strict: false});
-    dataUser.set('password', undefined, { strict: false });
-    dataUser.set('code', undefined, {strict: false});
-
     // preparamos respuesta
     const data = {
         token: tokenSign(dataUser),
-        user: dataUser
+        user: minimalUser(dataUser)
     }
 
     res.send(data);
@@ -48,11 +44,16 @@ const login = async (req, res) => {
         req = matchedData(req);
         const dataUser = await usersModel.findOne({ email: req.email });
 
+
         if(!dataUser){
             return res.status(404).send({ error: 'Usuario no encontrado'});
         }
 
-        if(!dataUser.state){
+        if (!dataUser.active) {
+            return res.status(403).send({ error: 'Usuario desactivado' });
+          }
+
+        if(!dataUser.verified){
             return res.status(409).send({ error: 'La cuenta no está verificada.'});
         }
 
@@ -60,14 +61,9 @@ const login = async (req, res) => {
             return res.status(401).send({ error: 'Contraseña inválida' });
         }
 
-        const userObject = dataUser.toObject();
-        delete userObject.password;
-        delete userObject.code;
-        delete userObject.tries;
-
         const data = {
             token: tokenSign(dataUser),
-            user: userObject
+            user: minimalUser(dataUser)
         };
 
         res.send(data);
@@ -98,18 +94,12 @@ const verifyEmail = async(req, res) =>{
             return res.status(400).send({ error: 'Código inválido'});
         }
 
-        user.state = true;
+        user.verified = true;
         await user.save();
 
         
-        //elimino campos que no quiero devolver
-        const userObject = user.toObject();
-        delete userObject._id;
-        delete userObject.password;
-        delete userObject.code;
-        delete userObject.tries;
 
-        return res.status(200).send({ message: 'Email verificado con éxito ', user:userObject});
+        return res.status(200).send({ message: 'Email verificado con éxito ', user:minimalUser(user)});
     } catch (error) {
         console.log(error);
         return res.status(500).send({ error: 'Error de servidor'});

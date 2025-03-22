@@ -1,100 +1,37 @@
 const { usersModel } = require('../models');
 const { handleHttpError } = require('../utils/handleHttpError');
 const { matchedData } = require('express-validator');
-const {uploadToPinata} = require('../utils/handleUploadIPFS')
+const { uploadToPinata } = require('../utils/handleUploadIPFS')
 
+//para no mostrar ciertos campos
+const { sanitizeUser } = require('../utils/sanitizers');
 
-const getUsers = async (req, res) => {
-
-    try {
-        const data = await tracksModel.find({});
-        res.send({ data });
-    } catch (error) {
-        handleHttpError(res, 'ERROR_GET_ITEMS');
-    }
-}
-
-
-const createUser = async (req, res) => {
-    try {
-        const { body } = matchedData(req);
-
-        const data = await usersModel.create(body);
-        res.json({ data });
-    } catch (error) {
-        handleHttpError(res, 'ERROR_CREATE_ITEMS');
-    }
-}
-
-
-const updateUser = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { body } = matchedData(req);
-        const data = await usersModel.findOneAndUpdate({ _id: id }, body, { new: true });
-        res.json({ data });
-    } catch (error) {
-        handleHttpError(res, 'ERROR_UPDATE_ITEMS');
-    }
-}
-
-
-const updateRole = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const role = req.user.role;
-        const data = await usersModel.findOneAndUpdate({ _id: id }, { role }, { new: true });
-        res.json({ data });
-    } catch (error) {
-        handleHttpError(res, 'ERROR_UPDATE_ROLE');
-    }
-}
-
-const deleteUser = async (req, res) => {
-    const { id } = req.params;
-    const data = await usersModel.findOneAndDelete(id);
-
-    res.json({ data });
-}
-
-//* NUEVAS FUNCIONALIDADES
 const putUserRegister = async (req, res) => {
     try {
         const data = matchedData(req);
+        const userId = req.user._id;
 
-        const user = req.user;
+        const updatedUser = await usersModel.findByIdAndUpdate(userId, data, { new: true });
 
-        user.email = data.email;
-        user.name = data.name;
-        user.surnames = data.surnames;
-        user.nif = data.nif;
-
-        await user.save();
-
-        return res.status(200).send({ message: 'Usuario editado con éxito', user });
+        return res.status(200).send({ message: 'Usuario editado con éxito', user: sanitizeUser(updatedUser) });
     } catch (error) {
         console.log(error);
         return res.status(500).send({ error: 'Internal error' });
     }
-}
+};
+
 
 
 const patchUserCompany = async (req, res) => {
     try {
         const user = req.user;
-        const { company } = req.body;
+        const { company } = matchedData(req, { locations: ['body'] });
 
-        if (company.name) user.company.name = company.name;
-        if (company.cif) user.company.cif = company.cif;
-        if (company.street) user.company.street = company.street;
-        if (company.number !== undefined) user.company.number = company.number;
-        if (company.postal !== undefined) user.company.postal = company.postal;
-        if (company.city) user.company.city = company.city;
-        if (company.province) user.company.province = company.province;
+        user.company = { ...company };
 
         await user.save();
 
-        return res.status(200).send({ message: 'Compañía actualizada con éxito', user });
+        return res.status(200).send({ message: 'Compañía actualizada con éxito', user: sanitizeUser(user) });
     } catch (error) {
         console.error('Error en patchUserCompany:', error);
         return res.status(500).send({ error: 'Internal error' });
@@ -130,12 +67,110 @@ const updateUserLogo = async (req, res) => {
     }
 };
 
-
+//* FUNCIONALIDADES EXTRA
 const getUser = async (req, res) => {
-    const { id } = req.params;
-    res.send({ message: 'Devolviendo usuario...' }, id);
+    try {
+        const user = req.user;
+
+        return res.status(200).send({ user: sanitizeUser(user) });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({ error: 'Error del servidor' });
+    }
 }
 
+const deleteUser = async (req, res) => {
+    try {
+        const user = req.user;
+        const isSoft = req.query.soft !== 'false'; // por defecto es soft delete
+
+        if (isSoft) {
+            user.active = false; // desactivado
+            await user.save();
+            return res.status(200).send({ message: 'Usuario desactivado (soft delete)' });
+        } else {
+            await usersModel.deleteOne({ _id: user._id });
+            return res.status(200).send({ message: 'Usuario eliminado permanentemente(hard delete)' });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ error: 'Error al eliminar el usuario' });
+    }
+};
+
+const requestPasswordReset = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await usersModel.findOne({ email });
+
+        if (!user) {
+            return res.status(404).send({ error: 'Usuario no encontrado' });
+        }
+
+        const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+        user.code = resetCode;
+        await user.save();
+
+        // Aquí enviarías el email en producción
+        return res.status(200).send({ message: 'Código enviado', code: resetCode }); // Solo para test
+    } catch (error) {
+        return res.status(500).send({ error: 'Error al generar código' });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    try {
+        const { email, code, newPassword } = req.body;
+
+        const user = await usersModel.findOne({ email, code });
+        if (!user) {
+            return res.status(400).send({ error: 'Código inválido' });
+        }
+
+        const hashed = await encrypt(newPassword); 
+        user.password = hashed;
+        // user.code = ''; // limpiar
+        await user.save();
+
+        return res.status(200).send({ message: 'Contraseña actualizada correctamente' });
+    } catch (error) {
+        return res.status(500).send({ error: 'Error al cambiar contraseña' });
+    }
+};
+
+const inviteUser = async (req, res) => {
+    try {
+        const inviter = req.user;
+        const { email } = req.body;
+
+        const userToInvite = await usersModel.findOne({ email });
+
+        if (!userToInvite) {
+            return res.status(404).send({ error: 'No existe ningún usuario con ese email' });
+        }
+
+        if (userToInvite.company?.name) {
+            return res.status(400).send({ error: 'Ese usuario ya pertenece a una compañía' });
+        }
+
+        userToInvite.role = 'guest';
+        userToInvite.company = inviter.company;
+
+        await userToInvite.save();
+
+        return res.status(200).send({
+            message: 'Usuario invitado con éxito',
+            user: {
+                email: userToInvite.email,
+                role: userToInvite.role,
+                company: userToInvite.company
+            }
+        });
+    } catch (error) {
+        console.error('Error al invitar usuario:', error);
+        return res.status(500).send({ error: 'Error al invitar al usuario' });
+    }
+};
 
 
-module.exports = { getUsers, getUser, createUser, updateUser, deleteUser, updateRole, putUserRegister, patchUserCompany,  updateUserLogo };
+module.exports = { getUser, deleteUser, putUserRegister, patchUserCompany, updateUserLogo };
