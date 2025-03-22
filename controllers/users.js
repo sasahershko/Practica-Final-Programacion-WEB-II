@@ -74,7 +74,7 @@ const putUserRegister = async (req, res) => {
 
         await user.save();
 
-        return res.status(200).send({ message: 'Usuario editado con éxito' }, user);
+        return res.status(200).send({ message: 'Usuario editado con éxito', user });
     } catch (error) {
         console.log(error);
         return res.status(500).send({ error: 'Internal error' });
@@ -82,7 +82,7 @@ const putUserRegister = async (req, res) => {
 }
 
 
-const patchUserCompany = async (res, req) => {
+const patchUserCompany = async (req, res) => {
     try {
         const user = req.user;
         const { company } = req.body;

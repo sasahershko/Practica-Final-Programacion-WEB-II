@@ -13,8 +13,8 @@ const {authMiddleware} = require('../middleware/session');
 // router.put('/role/:id', authMiddleware, checkRole(['admin']), updateRole);
 // router.delete('/:id', deleteUser);
 
-router.put('/register', authMiddleware, validatorPersonalData, patchUserCompany);
-router.patch('/company', authMiddleware, validatorCompanyData, putUserRegister );
+router.put('/register', authMiddleware, validatorPersonalData, putUserRegister);
+router.patch('/company', authMiddleware, validatorCompanyData, patchUserCompany );
 
 
 module.exports = router;

@@ -35,7 +35,7 @@ const validatorPersonalData = [
         .exists().withMessage('El nombre es requerido')
         .bail()
         .notEmpty().withMessage('El nombre no puede estar vacío'),
-    check('usernames')
+    check('surnames')
         .exists().withMessage('El apellido es requerido')
         .bail()
         .notEmpty().withMessage('El apellido no puede estar vacío'),

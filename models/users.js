@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 //email, contraseña, rol, estado, nº intentos, código 
 
 const UserScheme = new mongoose.Schema({
-    name: { type: String },
-    surnames: { type: String },
-    nif: { type: String },
+    name: { type: String, default: '' },
+    surnames: { type: String, default: '' },
+    nif: { type: String, default: ''  },
     email: { type: String, unique: true },
     password: { type: String },
     role: { type: String, enum: ['admin', 'user'], default: 'user' },

@@ -1,4 +1,4 @@
-###
+###* 1) REGISTRO
 POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
@@ -7,29 +7,30 @@ Content-Type: application/json
     "password": "12345678"
 }
 
-### 
+###* 2) VALIDACIÓN DE MAIL
 POST http://localhost:5000/api/auth/verify-email
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RkZDM1ZDM0ZGQ4M2U3Mjg0NWZiYjYiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjU5MDgxMywiZXhwIjoxNzQyNTk4MDEzfQ.e4VyrHwptLBAo0KY2LFTNp49YWsrhL9XdMdpgEfUD94
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlYTg3NDNlNjgzZWRmODRjYTA3ZWQiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY0NTM2NCwiZXhwIjoxNzQyNjUyNTY0fQ.YXm8A-LWIRcF0BKviyh7e2ip0QPmk8Ni8n2AN7vQaug
 
 {
-    "code": "668443"
+    "code": "314211"
 }
 
 
-###
+###* 3) LOGIN
 POST http://localhost:5000/api/auth/login
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RkZDM1ZDM0ZGQ4M2U3Mjg0NWZiYjYiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjU5MDgxMywiZXhwIjoxNzQyNTk4MDEzfQ.e4VyrHwptLBAo0KY2LFTNp49YWsrhL9XdMdpgEfUD94
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlYTg3NDNlNjgzZWRmODRjYTA3ZWQiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY0NTM2NCwiZXhwIjoxNzQyNjUyNTY0fQ.YXm8A-LWIRcF0BKviyh7e2ip0QPmk8Ni8n2AN7vQaug
 
 {
     "email": "sasahershko@gmail.com",
     "password": "12345678"
 }
 
-### * ON BOARDING
+###*4) ON BOARDING
 PUT http://localhost:5000/api/users/register
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RkZDM1ZDM0ZGQ4M2U3Mjg0NWZiYjYiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjU5MDg4MiwiZXhwIjoxNzQyNTk4MDgyfQ.QBGrMIp43ebAAy8Gt6KhKD1kkJP925t-ilvhvWaumFU
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlYTg3NDNlNjgzZWRmODRjYTA3ZWQiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY0NTM5NCwiZXhwIjoxNzQyNjUyNTk0fQ.IiJC7Ab6vTN9fSRgLZqvKB9rIYUFUux6JnnJL046anU
 
 {
     "email" : "sasahershko@gmail.com",
