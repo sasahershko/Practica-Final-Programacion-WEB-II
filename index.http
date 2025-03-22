@@ -10,17 +10,16 @@ Content-Type: application/json
 ###* 2) VALIDACIÓN DE MAIL
 POST http://localhost:5000/api/auth/verify-email
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlYTg3NDNlNjgzZWRmODRjYTA3ZWQiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY0NTM2NCwiZXhwIjoxNzQyNjUyNTY0fQ.YXm8A-LWIRcF0BKviyh7e2ip0QPmk8Ni8n2AN7vQaug
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlZDU2OTEwMjIwZjlkNDJiMGYwYjciLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY1Njg3MywiZXhwIjoxNzQyNjY0MDczfQ.9-2DxwiDe4bhetHPGFaxSVq5GA-o5KJ0jlJyQK8DxDk
 
 {
-    "code": "314211"
+    "code": "466147"
 }
 
 
 ###* 3) LOGIN
 POST http://localhost:5000/api/auth/login
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlYTg3NDNlNjgzZWRmODRjYTA3ZWQiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY0NTM2NCwiZXhwIjoxNzQyNjUyNTY0fQ.YXm8A-LWIRcF0BKviyh7e2ip0QPmk8Ni8n2AN7vQaug
 
 {
     "email": "sasahershko@gmail.com",
@@ -28,9 +27,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlYTg3N
 }
 
 ###*4) PUT
-PUT http://localhost:5000/api/users/register
+PUT http://localhost:5000/api/user/register
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlYTg3NDNlNjgzZWRmODRjYTA3ZWQiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY0NTM5NCwiZXhwIjoxNzQyNjUyNTk0fQ.IiJC7Ab6vTN9fSRgLZqvKB9rIYUFUux6JnnJL046anU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlZDU2OTEwMjIwZjlkNDJiMGYwYjciLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY1NjkyMCwiZXhwIjoxNzQyNjY0MTIwfQ.7QUN-Poj6jw09IJ8Bg1x5NE2rsm_BlY9sAw5rppJrd
 
 {
     "email" : "sasahershko@gmail.com",
@@ -40,7 +39,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlYTg3N
 }
 
 ###* 4) PATCH
-PATCH http://localhost:5000/api/users/company
+PATCH http://localhost:5000/api/user/company
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlYTg3NDNlNjgzZWRmODRjYTA3ZWQiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY0NTM5NCwiZXhwIjoxNzQyNjUyNTk0fQ.IiJC7Ab6vTN9fSRgLZqvKB9rIYUFUux6JnnJL046anU
 
@@ -55,3 +54,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlYTg3N
       "province": "PRUEBA PROVINCIA"
     }
 }
+
+###* 5) PATCH LOGO
+PATCH http://localhost:5000/api/user/logo HTTP/1.1
+Content-Type: multipart/form-data; boundary=boundary123
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlZDU2OTEwMjIwZjlkNDJiMGYwYjciLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY1NzMzNiwiZXhwIjoxNzQyNjY0NTM2fQ.QEqzEjo_id_zo3pjYNZ3IvV1fW-83tTDQqaXOrUfn10
+
+--boundary123
+Content-Disposition: form-data; name="image"; filename="star-icon.jpg"
+Content-Type: image/jpeg
+
+< ./logos/star-icon.jpg
+--boundary123--
+
+
+

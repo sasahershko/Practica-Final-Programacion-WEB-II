@@ -19,7 +19,8 @@ const UserScheme = new mongoose.Schema({
         postal: { type: Number, default: null },
         city: { type: String, default: '' },
         province: { type: String, default: '' },
-    }
+    },
+    logo: {type: String, default: ''},
 },
     {
         timestamps: true,

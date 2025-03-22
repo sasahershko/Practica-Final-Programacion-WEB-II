@@ -25,7 +25,7 @@ const authMiddleware = async(req, res, next) =>{
             handleHttpError(res, 'USER_NOT_EXISTS', 404);
             return;
         }
-        
+
         req.user = user; 
         next();
     } catch (error) {   

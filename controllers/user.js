@@ -1,6 +1,8 @@
 const { usersModel } = require('../models');
 const { handleHttpError } = require('../utils/handleHttpError');
 const { matchedData } = require('express-validator');
+const {uploadToPinata} = require('../utils/handleUploadIPFS')
+
 
 const getUsers = async (req, res) => {
 
@@ -10,11 +12,6 @@ const getUsers = async (req, res) => {
     } catch (error) {
         handleHttpError(res, 'ERROR_GET_ITEMS');
     }
-}
-
-const getUser = async (req, res) => {
-    const { id } = req.params;
-    res.send({ message: 'Devolviendo usuario...' }, id);
 }
 
 
@@ -102,7 +99,43 @@ const patchUserCompany = async (req, res) => {
         console.error('Error en patchUserCompany:', error);
         return res.status(500).send({ error: 'Internal error' });
     }
+};
+
+
+const updateUserLogo = async (req, res) => {
+    try {
+        const file = req.file;
+
+        if (!file) {
+            return res.status(400).send({ error: 'No se ha enviado ninguna imagen.' });
+        }
+
+        const { buffer, originalname } = file;
+
+        // el tamaño ya controlado por multer (5MB)
+
+        // subimos a IPFS
+        const pinataResponse = await uploadToPinata(buffer, originalname);
+        const ipfsHash = pinataResponse.IpfsHash;
+        const logoURL = `https://${process.env.PINATA_GATEWAY_URL}/ipfs/${ipfsHash}`;
+
+        //actualizamos el usuario (extraído del token)
+        const userId = req.user._id;
+        const user = await usersModel.findByIdAndUpdate(userId, { logo: logoURL }, { new: true });
+
+        res.json({ message: 'Logo actualizado correctamente', logo: user.logo });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: 'ERROR_UPDATING_LOGO' });
+    }
+};
+
+
+const getUser = async (req, res) => {
+    const { id } = req.params;
+    res.send({ message: 'Devolviendo usuario...' }, id);
 }
 
 
-module.exports = { getUsers, getUser, createUser, updateUser, deleteUser, updateRole, putUserRegister, patchUserCompany };
+
+module.exports = { getUsers, getUser, createUser, updateUser, deleteUser, updateRole, putUserRegister, patchUserCompany,  updateUserLogo };
