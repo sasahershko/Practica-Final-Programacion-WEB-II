@@ -11,7 +11,7 @@ const {authMiddleware} = require('../middleware/session');
 
 router.get('/', authMiddleware, getUser); 
 router.delete('/', authMiddleware, deleteUser); 
-router.put('/register', authMiddleware, validatorPersonalData, putUserRegister);
+router.patch('/register', authMiddleware, validatorPersonalData, putUserRegister);
 router.patch('/company', authMiddleware, validatorCompanyData, patchUserCompany );
 router.patch('/logo', authMiddleware, uploadMiddlewareMemory.single('image'), updateUserLogo);
 
