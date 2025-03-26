@@ -10,10 +10,10 @@ Content-Type: application/json
 ###* 2) VALIDACIÓN DE MAIL
 POST http://localhost:5000/api/auth/verify-email
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlZTQzZDQyN2ZlMDJmNzQ1NzdkODQiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY2MDY2OSwiZXhwIjoxNzQyNjY3ODY5fQ.YoxCL6UB0BRP2rTMnUYHLtKeBqmoWan0nirtCRB2MBQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzAxMTA3NCwiZXhwIjoxNzQzMDE4Mjc0fQ.dsYH1M-ZWH_MNzcxbzEEEHNOaJdZiJJwBaXmDwmPnCo
 
 {
-    "code": "72176"
+    "code": "475987"
 }
 
 
@@ -68,7 +68,6 @@ Content-Type: image/jpeg
 --boundary123--
 
 
-
 ###* 6) GET USER
 GET http://localhost:5000/api/user
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlZTQzZDQyN2ZlMDJmNzQ1NzdkODQiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY2MDg5NSwiZXhwIjoxNzQyNjY4MDk1fQ.rRT0koEAPeKUr2is101otuDKjJs9Sr9qFfxsjVps9h8
@@ -82,4 +81,30 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlZTQzZDQyN2Zl
 DELETE http://localhost:5000/api/user
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlZTQzZDQyN2ZlMDJmNzQ1NzdkODQiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY2MDg5NSwiZXhwIjoxNzQyNjY4MDk1fQ.rRT0koEAPeKUr2is101otuDKjJs9Sr9qFfxsjVps9h8
 
-###* 6)
+###* 6) CONTRASEÑA - ENVIAMOS CÓDIGO (MODIFICAMOS CÓDIGO)
+POST http://localhost:5000/api/user/recover
+Content-Type: application/json
+
+{
+    "email": "ejemplo@gmail.com"
+}
+
+###* 6) CONTRASEÑA - VALIDAMOS EL CÓDIGO
+
+PUT http://localhost:5000/api/user/validation
+Content-Type: application/json
+
+{
+    "email": "ejemplo@gmail.com",
+    "code": "793975"
+}
+
+###* 6) MODIFICAMOS LA CONTRASEÑA
+
+PATCH http://localhost:5000/api/user/password
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJpYXQiOjE3NDMwMTQyOTcsImV4cCI6MTc0MzAyMTQ5N30.rZk5AVQv6e7A63b0LpqvVmVkOoF2NJ2g36_49os8MOc
+
+{
+    "password" : "87654321"
+}

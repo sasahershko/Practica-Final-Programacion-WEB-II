@@ -2,27 +2,35 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET;
 
 
-const tokenSign = (user) =>{
-    const sign = jwt.sign(
+const tokenSign = (user) => {
+    return jwt.sign(
         {
             _id: user._id,
             role: user.role
         },
-    JWT_SECRET,
-    {
-        expiresIn:'2h'
-    }
+        JWT_SECRET,
+        {expiresIn: '2h'}
     )
-    return sign;
 }
 
-
-const verifyToken = (tokenJwt) =>{
+const verifyToken = (tokenJwt) => {
     try {
         return jwt.verify(tokenJwt, JWT_SECRET);
     } catch (error) {
         console.log(error);
+        return null;        
     }
 }
 
-module.exports = {tokenSign, verifyToken}
+const createResetToken = (userId) => {
+    return jwt.sign(
+        { 
+            id: userId, 
+            action: 'reset_password'
+        },
+        JWT_SECRET,
+        {expiresIn: '10m'}
+    )
+}
+
+module.exports = {tokenSign, verifyToken, createResetToken};

@@ -1,7 +1,11 @@
 const { usersModel } = require('../models');
 const { handleHttpError } = require('../utils/handleHttpError');
 const { matchedData } = require('express-validator');
-const { uploadToPinata } = require('../utils/handleUploadIPFS')
+const { uploadToPinata } = require('../utils/handleUploadIPFS');
+
+//TOKEN para código de recuperación de passwd
+const { tokenSign } = require('../utils/handleJwt');
+const { encrypt } = require('../utils/handlePassword')
 
 //para no mostrar ciertos campos
 const { sanitizeUser } = require('../utils/sanitizers');
@@ -98,6 +102,7 @@ const deleteUser = async (req, res) => {
     }
 };
 
+
 const requestPasswordReset = async (req, res) => {
     try {
         const { email } = req.body;
@@ -111,32 +116,58 @@ const requestPasswordReset = async (req, res) => {
         user.code = resetCode;
         await user.save();
 
-        // Aquí enviarías el email en producción
-        return res.status(200).send({ message: 'Código enviado', code: resetCode }); // Solo para test
+        //aquí en principio mandas el correo de verificación de nuevo al correo //TODO
+        return res.status(200).send({ message: 'Código enviado' });
     } catch (error) {
         return res.status(500).send({ error: 'Error al generar código' });
     }
 };
 
-const resetPassword = async (req, res) => {
+const verifyResetCode = async (req, res) => {
     try {
-        const { email, code, newPassword } = req.body;
+        const { email, code } = req.body;
+        const user = await usersModel.findOne({ email });
 
-        const user = await usersModel.findOne({ email, code });
         if (!user) {
-            return res.status(400).send({ error: 'Código inválido' });
+            return res.status(404).send({ error: 'Usuario no encontrado' });
         }
 
-        const hashed = await encrypt(newPassword); 
-        user.password = hashed;
-        // user.code = ''; // limpiar
+        if (user.code !== code) {
+            return res.status(400).send({ error: 'Código incorrecto' });
+        }
+
+        const token = tokenSign(user._id);
+
+        return res.status(200).send({ message: 'Código verificado ', token });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({ error: 'Error al verificar código' });
+    }
+}
+
+const resetPassword = async (req, res) => {
+    try {
+        const { password } = req.body;
+        const { id } = req.user;
+
+        if (!password) {
+            res.status(400).send({ message: 'Contraseña requerida' });
+        }
+
+        const user = await usersModel.findById(id);
+
+        if (!user) {
+            res.status(404).send({ message: 'Usuario no encontrado' });
+        }
+
+        user.password = await encrypt(password);
         await user.save();
 
-        return res.status(200).send({ message: 'Contraseña actualizada correctamente' });
+        res.status(200).send({ message: 'Contraseña cambiada con éxito' });
     } catch (error) {
-        return res.status(500).send({ error: 'Error al cambiar contraseña' });
+        res.status(500).send({ message: 'Error de servidor' });
     }
-};
+}
 
 const inviteUser = async (req, res) => {
     try {
@@ -173,4 +204,4 @@ const inviteUser = async (req, res) => {
 };
 
 
-module.exports = { getUser, deleteUser, putUserRegister, patchUserCompany, updateUserLogo };
+module.exports = { getUser, deleteUser, putUserRegister, patchUserCompany, updateUserLogo, requestPasswordReset, verifyResetCode, resetPassword };
