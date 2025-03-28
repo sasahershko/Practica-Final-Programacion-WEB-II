@@ -23,6 +23,7 @@ router.put('/validation', verifyResetCode);
 //cambiar contra
 router.patch('/password', authMiddleware, resetPassword);
 
-
+//invitar a un usuario
+router.post('/invite', checkAuth, checkRole(['user']), inviteUser);
 
 module.exports = router;

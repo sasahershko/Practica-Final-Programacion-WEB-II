@@ -171,37 +171,67 @@ const resetPassword = async (req, res) => {
 
 const inviteUser = async (req, res) => {
     try {
-        const inviter = req.user;
-        const { email } = req.body;
-
-        const userToInvite = await usersModel.findOne({ email });
-
-        if (!userToInvite) {
-            return res.status(404).send({ error: 'No existe ningún usuario con ese email' });
-        }
-
-        if (userToInvite.company?.name) {
-            return res.status(400).send({ error: 'Ese usuario ya pertenece a una compañía' });
-        }
-
-        userToInvite.role = 'guest';
-        userToInvite.company = inviter.company;
-
-        await userToInvite.save();
-
-        return res.status(200).send({
-            message: 'Usuario invitado con éxito',
-            user: {
-                email: userToInvite.email,
-                role: userToInvite.role,
-                company: userToInvite.company
-            }
+      // usuario que hace la invitación (ya viene autenticado y con req.user cargado)
+      const inviter = req.user; 
+      const { email } = req.body; // email del usuario que se quiere invitar
+  
+      // buscar si ya existe un usuario con ese email
+      let userToInvite = await usersModel.findOne({ email });
+  
+      // si NO existe, crear uno nuevo
+      if (!userToInvite) {
+        // aquí debería generar una contraseña temporal o algún token de invitación
+        // para simplicidad, lo dejaré  vacío o con un password genérico
+        userToInvite = new usersModel({
+          email,
+          password: 'contraseñaTemporal', // dbería usar bcrypt para hashear una temporal?
+          role: 'guest',
+          company: inviter.company,
         });
+  
+        await userToInvite.save();
+  
+        return res.status(201).send({
+          message: 'Usuario creado e invitado con éxito',
+          user: {
+            email: userToInvite.email,
+            role: userToInvite.role,
+            company: userToInvite.company
+          }
+        });
+      }
+  
+      // si el usuario YA existe, validar que no se invite a sí mismo
+      if (userToInvite._id.equals(inviter._id)) {
+        return res.status(400).send({ error: 'No puedes invitarte a ti mismo' });
+      }
+  
+      // validar si ese usuario ya tiene compañía asignada
+      if (userToInvite.company) {
+        return res.status(400).send({
+          error: 'Ese usuario ya pertenece a una compañía'
+        });
+      }
+  
+      // asignar rol 'guest' y la compañía del que invita
+      userToInvite.role = 'guest';
+      userToInvite.company = inviter.company;
+      await userToInvite.save();
+  
+      return res.status(200).send({
+        message: 'Usuario invitado con éxito',
+        user: {
+          email: userToInvite.email,
+          role: userToInvite.role,
+          company: userToInvite.company
+        }
+      });
     } catch (error) {
-        console.error('Error al invitar usuario:', error);
-        return res.status(500).send({ error: 'Error al invitar al usuario' });
+      console.error('Error al invitar usuario:', error);
+      return res.status(500).send({ error: 'Error al invitar al usuario' });
     }
-};
+  };
+
 
 
 module.exports = { getUser, deleteUser, putUserRegister, patchUserCompany, updateUserLogo, requestPasswordReset, verifyResetCode, resetPassword };

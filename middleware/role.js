@@ -1,14 +1,13 @@
 const { handleHttpError } = require('../utils/handleHttpError');
 
 const checkRole = (roles) => (req, res, next) => {
-
     try {
         const userRole = req.user.role;
 
-        if(userRole.includes(roles)){
+        if (roles.includes(userRole)) {
             next();
-        }else{
-            res.status(400).send({error: 'NOT_ALLOWED'});
+        } else {
+            res.status(403).send({ error: 'NOT_ALLOWED' }); 
         }
     } catch (error) {
         console.log('ERROR: ', error.message);
@@ -16,4 +15,4 @@ const checkRole = (roles) => (req, res, next) => {
     }
 };
 
-module.exports = {checkRole};
+module.exports = { checkRole };
