@@ -234,4 +234,4 @@ const inviteUser = async (req, res) => {
 
 
 
-module.exports = { getUser, deleteUser, putUserRegister, patchUserCompany, updateUserLogo, requestPasswordReset, verifyResetCode, resetPassword };
+module.exports = { getUser, deleteUser, putUserRegister, patchUserCompany, updateUserLogo, requestPasswordReset, verifyResetCode, resetPassword, inviteUser };

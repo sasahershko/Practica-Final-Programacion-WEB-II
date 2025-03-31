@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {validatorPersonalData, validatorCompanyData} = require('../validators/user');
-const {putUserRegister, patchUserCompany, updateUserLogo, getUser, deleteUser, requestPasswordReset,verifyResetCode, resetPassword } = require('../controllers/user');
+const {putUserRegister, patchUserCompany, updateUserLogo, getUser, deleteUser, requestPasswordReset,verifyResetCode, resetPassword, inviteUser } = require('../controllers/user');
 //LOGO
 const { uploadMiddlewareMemory} = require('../utils/handleStorage');
 
@@ -24,6 +24,6 @@ router.put('/validation', verifyResetCode);
 router.patch('/password', authMiddleware, resetPassword);
 
 //invitar a un usuario
-router.post('/invite', checkAuth, checkRole(['user']), inviteUser);
+router.post('/invite', authMiddleware, checkRole(['user']), inviteUser);
 
 module.exports = router;

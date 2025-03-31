@@ -41,7 +41,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlZTQzZ
 ###* 4) PATCH
 PATCH http://localhost:5000/api/user/company
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlZTQzZDQyN2ZlMDJmNzQ1NzdkODQiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY2MDg5NSwiZXhwIjoxNzQyNjY4MDk1fQ.rRT0koEAPeKUr2is101otuDKjJs9Sr9qFfxsjVps9h8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzQxOTk2MywiZXhwIjoxNzQzNDI3MTYzfQ.gaphK7_CRnHCVZqU9_OiP3i4bpa1eR7OAK2xWZ-nElw
 
 {
    "company": {
@@ -96,15 +96,25 @@ Content-Type: application/json
 
 {
     "email": "ejemplo@gmail.com",
-    "code": "793975"
+    "code": "513003"
 }
 
 ###* 6) MODIFICAMOS LA CONTRASEÑA
 
 PATCH http://localhost:5000/api/user/password
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJpYXQiOjE3NDMwMTQyOTcsImV4cCI6MTc0MzAyMTQ5N30.rZk5AVQv6e7A63b0LpqvVmVkOoF2NJ2g36_49os8MOc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJpYXQiOjE3NDM0MTk5MzUsImV4cCI6MTc0MzQyNzEzNX0.G1QdYTQCC0vs2CbY4g3rJXXH1g9TNX-VyDim2sANglk
 
 {
-    "password" : "87654321"
+    "password" : "12345678"
+}
+
+
+###* 6) INVITACIÓN A UNA PERSONA
+POST http://localhost:5000/api/user/invite
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzQxOTk2MywiZXhwIjoxNzQzNDI3MTYzfQ.gaphK7_CRnHCVZqU9_OiP3i4bpa1eR7OAK2xWZ-nElw
+Content-Type: application/json
+
+{
+  "email": "email_del_invitado1@ejemplo.com"
 }
