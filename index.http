@@ -27,7 +27,7 @@ Content-Type: application/json
 }
 
 ###*4) PUT
-PUT http://localhost:5000/api/user/register
+PATCH http://localhost:5000/api/user/register
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlZTQzZDQyN2ZlMDJmNzQ1NzdkODQiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MjY2MDg5NSwiZXhwIjoxNzQyNjY4MDk1fQ.rRT0koEAPeKUr2is101otuDKjJs9Sr9qFfxsjVps9h8
 

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {validatorPersonalData, validatorCompanyData} = require('../validators/user');
-const {putUserRegister, patchUserCompany, updateUserLogo, getUser, deleteUser, requestPasswordReset,verifyResetCode, resetPassword, inviteUser } = require('../controllers/user');
+const {patchUserRegister, patchUserCompany, updateUserLogo, getUser, deleteUser, requestPasswordReset,verifyResetCode, resetPassword, inviteUser } = require('../controllers/user');
 //LOGO
 const { uploadMiddlewareMemory} = require('../utils/handleStorage');
 
@@ -12,7 +12,7 @@ const {verifyResetToken} = require('../middleware/verifyResetToken');
 
 router.get('/', authMiddleware, getUser); 
 router.delete('/', authMiddleware, deleteUser); 
-router.patch('/register', authMiddleware, validatorPersonalData, putUserRegister);
+router.patch('/register', authMiddleware, validatorPersonalData, patchUserRegister);
 router.patch('/company', authMiddleware, validatorCompanyData, patchUserCompany );
 router.patch('/logo', authMiddleware, uploadMiddlewareMemory.single('image'), updateUserLogo);
 

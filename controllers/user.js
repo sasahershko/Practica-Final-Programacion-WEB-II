@@ -10,7 +10,7 @@ const { encrypt } = require('../utils/handlePassword')
 //para no mostrar ciertos campos
 const { sanitizeUser } = require('../utils/sanitizers');
 
-const putUserRegister = async (req, res) => {
+const patchUserRegister = async (req, res) => {
     try {
         const data = matchedData(req);
         const userId = req.user._id;
@@ -234,4 +234,4 @@ const inviteUser = async (req, res) => {
 
 
 
-module.exports = { getUser, deleteUser, putUserRegister, patchUserCompany, updateUserLogo, requestPasswordReset, verifyResetCode, resetPassword, inviteUser };
+module.exports = { getUser, deleteUser, patchUserRegister, patchUserCompany, updateUserLogo, requestPasswordReset, verifyResetCode, resetPassword, inviteUser };
