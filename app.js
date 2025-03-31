@@ -15,9 +15,6 @@ app.use(express.json());
 
 app.use('/api', router);
 
-//PARA EL STORAGE
-// app.use(express.static('storage'));
-
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => {

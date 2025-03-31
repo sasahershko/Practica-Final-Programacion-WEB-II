@@ -41,7 +41,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlZTQzZ
 ###* 4) PATCH
 PATCH http://localhost:5000/api/user/company
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzQxOTk2MywiZXhwIjoxNzQzNDI3MTYzfQ.gaphK7_CRnHCVZqU9_OiP3i4bpa1eR7OAK2xWZ-nElw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzQyMDM1NywiZXhwIjoxNzQzNDI3NTU3fQ.an7EbzX81IALj1EzkC90L8ZWinUKaLOSSh46l-86AMM
 
 {
    "company": {

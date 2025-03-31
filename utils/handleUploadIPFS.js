@@ -12,7 +12,6 @@ const uploadToPinata = async(fileBuffer, fileName) =>{
     data.append('file', blob, fileName); 
     data.append('pinataMetadata', metadata);
     data.append('pinataOptions', options);
-    // console.log('DATA: ', data);
     
     try {
         const pinataApiKey = process.env.PINATA_KEY;
