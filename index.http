@@ -118,3 +118,18 @@ Content-Type: application/json
 {
   "email": "email_del_invitado1@ejemplo.com"
 }
+
+
+########################* PRÁCTICA FINAL
+##* CORREO
+POST http://localhost:5000/api/mail
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDA1MjgzNiwiZXhwIjoxNzQ0MDYwMDM2fQ.aWuntpr9smz1ywmhOwrOhfuA6oE2Jl83L8WtwMG3_Ho
+
+{
+    "subject": "holi",
+    "text": "holi buenas",
+    "to": "saray.hershkovich@live.u-tad.com",
+    "from": "hola@gmail.com"
+}
+
