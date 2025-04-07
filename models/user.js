@@ -8,6 +8,7 @@ const UserScheme = new mongoose.Schema({
     nif: { type: String, default: ''  },
     email: { type: String, unique: true },
     password: { type: String },
+    tries: { type: Number, default: 3 },
     role: { type: String, enum: ['admin', 'user', 'guest'], default: 'user' },
     verified: { type: Boolean, default: false },
     active: { type: Boolean, default: true}, //si se desactiva, estaría en soft delete

@@ -3,17 +3,17 @@ POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
 {
-    "email": "ejemplo@gmail.com",
+    "email": "linear.skunk.teqe@letterhaven.net",
     "password": "12345678"
 }
 
 ###* 2) VALIDACIÓN DE MAIL
 POST http://localhost:5000/api/auth/verify-email
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzAxMTA3NCwiZXhwIjoxNzQzMDE4Mjc0fQ.dsYH1M-ZWH_MNzcxbzEEEHNOaJdZiJJwBaXmDwmPnCo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDA1NTQ3OCwiZXhwIjoxNzQ0MDYyNjc4fQ.8JpwuUDv3mxuEsyJJFCdtJ8ybyEuHVhDvC29Pul76EM
 
 {
-    "code": "475987"
+    "code": "765744"
 }
 
 
@@ -22,7 +22,7 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "ejemplo@gmail.com",
+    "email": "linear.skunk.teqe@letterhaven.net",
     "password": "12345678"
 }
 
@@ -112,11 +112,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwM
 
 ###* 6) INVITACIÓN A UNA PERSONA
 POST http://localhost:5000/api/user/invite
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzQxOTk2MywiZXhwIjoxNzQzNDI3MTYzfQ.gaphK7_CRnHCVZqU9_OiP3i4bpa1eR7OAK2xWZ-nElw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDA1NTUwOSwiZXhwIjoxNzQ0MDYyNzA5fQ.V7p7mDYIbv6jbO6yq8vGX_YDBIfYBPEsBgOsmKIzSoo
 Content-Type: application/json
 
 {
-  "email": "email_del_invitado1@ejemplo.com"
+  "email": "quintessential.falcon.zfhk@letterhaven.net"
 }
 
 
