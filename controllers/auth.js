@@ -76,7 +76,7 @@ const verifyEmail = async (req, res) => {
         const { code } = req.body;
 
         const user = await usersModel.findById(userId);
-        console.log(user)
+
         if (!user) {
             return res.status(404).send({ error: 'Usuario no encontrado' });
         }
