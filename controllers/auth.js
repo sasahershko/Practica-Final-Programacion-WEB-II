@@ -4,6 +4,8 @@ const { encrypt, compare } = require('../utils/handlePassword');
 const { usersModel } = require('../models');
 const { tokenSign, verifyToken } = require('../utils/handleJwt');
 
+//! ESTO ES UNA PRUEBA
+
 //para que no devuelva ciertos campos
 const { minimalUser } = require('../utils/sanitizers');
 
