@@ -32,7 +32,7 @@ const patchUserRegister = async (req, res) => {
 const patchUserCompany = async (req, res) => {
     try {
         const user = req.user;
-        const { company } = matchedData(req, { locations: ['body'] });
+        const { company } = matchedData(req);
 
         user.company = { ...company };
 

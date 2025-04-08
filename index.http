@@ -133,3 +133,65 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwM
     "from": "hola@gmail.com"
 }
 
+
+######################* CLIENTS ###############################
+##* 1.1) CREATE  client
+POST http://localhost:5000/api/client
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEyOTUxOCwiZXhwIjoxNzQ0MTM2NzE4fQ.2EvOafgdFP3bjYIR-nefHzFk-NVK5GZpqHUpFQuTzsE
+
+{
+  "name": "ACS",
+  "cif": "D52921210",
+  "address": {
+    "street": "Carlos V",
+    "number": 22,
+    "postal": 28936,
+    "city": "Móstoles",
+    "province": "Madrid"
+  }
+}
+
+###* 1.2) PATCH client
+PATCH http://localhost:5000/api/client/67f5585f13c315993b698121
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEyOTUxOCwiZXhwIjoxNzQ0MTM2NzE4fQ.2EvOafgdFP3bjYIR-nefHzFk-NVK5GZpqHUpFQuTzsE
+
+{
+  "name": "ABCD",
+  "cif": "D52921210",
+  "address": {
+    "street": "Carlos V",
+    "number": 22,
+    "postal": 28936,
+    "city": "Móstoles",
+    "province": "Madrid"
+  }
+}
+
+###* 2.1) GET clients
+GET http://localhost:5000/api/client
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEyOTUxOCwiZXhwIjoxNzQ0MTM2NzE4fQ.2EvOafgdFP3bjYIR-nefHzFk-NVK5GZpqHUpFQuTzsE
+
+###* 2.2) GET client by id
+GET http://localhost:5000/api/client/67f5585f13c315993b698121
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEyOTUxOCwiZXhwIjoxNzQ0MTM2NzE4fQ.2EvOafgdFP3bjYIR-nefHzFk-NVK5GZpqHUpFQuTzsE
+
+###* 3.1) DELETE client (soft)
+DELETE http://localhost:5000/api/client/archive/67f56182456e517098d93e3f
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEyOTUxOCwiZXhwIjoxNzQ0MTM2NzE4fQ.2EvOafgdFP3bjYIR-nefHzFk-NVK5GZpqHUpFQuTzsE
+
+###* 3.2) DELETE client (hard)
+DELETE http://localhost:5000/api/client/67f5592afaa28dc46bb93a33
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEyOTUxOCwiZXhwIjoxNzQ0MTM2NzE4fQ.2EvOafgdFP3bjYIR-nefHzFk-NVK5GZpqHUpFQuTzsE
+
+###* 4.1) GET clientes archivados
+GET http://localhost:5000/api/client/archive
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEyOTUxOCwiZXhwIjoxNzQ0MTM2NzE4fQ.2EvOafgdFP3bjYIR-nefHzFk-NVK5GZpqHUpFQuTzsE
+
+###* 4.2) PATCH (recuperar) cliente archivado
+PATCH http://localhost:5000/api/client/recover/67f56182456e517098d93e3f
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEyOTUxOCwiZXhwIjoxNzQ0MTM2NzE4fQ.2EvOafgdFP3bjYIR-nefHzFk-NVK5GZpqHUpFQuTzsE
+
+
+######################* PROJECTS ###############################
