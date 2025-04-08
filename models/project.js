@@ -1,4 +1,3 @@
-// /models/Project.js
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
@@ -45,7 +44,7 @@ const projectSchema = new Schema(
     },
     address: addressSchema,
     begin: {
-      type: String // O Date??
+      type: String // O Date?? debería ser date
     },
     end: {
       type: String // O Date??

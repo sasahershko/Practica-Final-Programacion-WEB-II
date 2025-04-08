@@ -177,7 +177,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiN
 GET http://localhost:5000/api/client/67f5585f13c315993b698121
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEyOTUxOCwiZXhwIjoxNzQ0MTM2NzE4fQ.2EvOafgdFP3bjYIR-nefHzFk-NVK5GZpqHUpFQuTzsE
 
-###* 3.1) DELETE client (soft)
+###* 3.1) DELETE client (soft) -> archivar
 DELETE http://localhost:5000/api/client/archive/67f56182456e517098d93e3f
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEyOTUxOCwiZXhwIjoxNzQ0MTM2NzE4fQ.2EvOafgdFP3bjYIR-nefHzFk-NVK5GZpqHUpFQuTzsE
 
@@ -195,3 +195,72 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiN
 
 
 ######################* PROJECTS ###############################
+##* 1.1) POST un project
+POST http://localhost:5000/api/project
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEzNzkzOCwiZXhwIjoxNzQ0MTQ1MTM4fQ.GU1p-QvQer0dM73DdZEjM81kqRXcg2wjqhEI-0wFRFw
+
+{
+  "name": "Nombre del proyecto 1",
+  "projectCode": "Identificador de proyecto",
+  "email": "mimail@gmail.com",
+  "address": {
+    "street": "Carlos V",
+    "number": 22,
+    "postal": 28936,
+    "city": "Móstoles",
+    "province": "Madrid"
+  },
+  "code": "Código interno del proyecto",
+  "clientId": "67f56182456e517098d93e3f"
+}
+
+
+###* 1.2) PATCH de projecto
+PATCH http://localhost:5000/api/project/67f56f7d214069f766f80b86
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEzNzkzOCwiZXhwIjoxNzQ0MTQ1MTM4fQ.GU1p-QvQer0dM73DdZEjM81kqRXcg2wjqhEI-0wFRFw
+
+{
+  "name": "obra",
+  "code": "00001-01",
+  "projectCode": "100000",
+  "email": "mimail@gmail.com",
+  "clientId": "67f42cb57fab4fadc6eaeeba",
+  "address": {
+    "street": "Carlos V",
+    "number": 22,
+    "postal": 28936,
+    "city": "Móstoles",
+    "province": "Madrid"
+  },
+  "notes": "XXX XXX XXXX"
+}
+
+
+###* 2.1) GET de todos los proyectos
+GET http://localhost:5000/api/project
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEzNzkzOCwiZXhwIjoxNzQ0MTQ1MTM4fQ.GU1p-QvQer0dM73DdZEjM81kqRXcg2wjqhEI-0wFRFw
+
+###* 2.2) GET de un proyecto específico
+GET http://localhost:5000/api/project/one/67f56f7d214069f766f80b86
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEzNzkzOCwiZXhwIjoxNzQ0MTQ1MTM4fQ.GU1p-QvQer0dM73DdZEjM81kqRXcg2wjqhEI-0wFRFw
+
+
+###* 3.1) DELETE project (soft) -> archivar
+DELETE http://localhost:5000/api/project/archive/67f572d6f6b774fa67eb1220
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEzNzkzOCwiZXhwIjoxNzQ0MTQ1MTM4fQ.GU1p-QvQer0dM73DdZEjM81kqRXcg2wjqhEI-0wFRFw
+
+###* 3.2) DELETE project (hard) -> eliminar definitivamente
+DELETE http://localhost:5000/api/project/67f56f7d214069f766f80b86
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEzNzkzOCwiZXhwIjoxNzQ0MTQ1MTM4fQ.GU1p-QvQer0dM73DdZEjM81kqRXcg2wjqhEI-0wFRFw
+
+
+###* 4.1)
+GET http://localhost:5000/api/project/archive
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEzNzkzOCwiZXhwIjoxNzQ0MTQ1MTM4fQ.GU1p-QvQer0dM73DdZEjM81kqRXcg2wjqhEI-0wFRFw
+
+###* 4.2) PATCH (recuperar) cliente archivado
+PATCH http://localhost:5000/api/project/recover/67f572d6f6b774fa67eb1220
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEzNzkzOCwiZXhwIjoxNzQ0MTQ1MTM4fQ.GU1p-QvQer0dM73DdZEjM81kqRXcg2wjqhEI-0wFRFw
+
