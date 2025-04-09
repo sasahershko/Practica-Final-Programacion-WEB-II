@@ -1,39 +1,26 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
 
-const addressSchema = new Schema({
-  street: String,
-  number: Number,
-  postal: Number,
-  city: String,
-  province: String
-}, { _id: false }); 
+const ClientSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  logo: { type: String, default: '' },
 
-const clientSchema = new Schema({
-  userId: {
-    type: Schema.Types.ObjectId,
-    ref: 'User', 
-    required: true
+  activeProjects: { type: Number, default: 0 },
+  pendingDeliveryNotes: { type: Number, default: 0 },
+  
+  address: {
+    street: { type: String },
+    cif: { type: String },
+    number: { type: Number },
+    postal: { type: Number },
+    city: { type: String },
+    province: { type: String }
   },
-  name: {
-    type: String,
-    required: true
-  },
-  cif: {
-    type: String,
-    required: true
-  },
-  logo: {
-    type: String
-  },
-  address: addressSchema,
-  // Campo para soft-delete:
-  archived: {
-    type: Boolean,
-    default: false
-  }
 
-  //* además añadir activeProjects y pendingDeliveryNotes
-}, { timestamps: true });
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true },
+  deleted: { type: Boolean, default: false }
+}, {
+  timestamps: true,
+  versionKey: false
+});
 
-module.exports = mongoose.model('Client', clientSchema);
+module.exports = mongoose.model('clients', ClientSchema);
