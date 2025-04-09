@@ -92,8 +92,8 @@ const deliveryNoteSchema = new Schema(
         },
 
         sign: {
-            type: String, // ruta o URL de la firma
-            default: false
+            type: String, // URL de la firma
+            default: ''
         },
 
 
@@ -106,10 +106,16 @@ const deliveryNoteSchema = new Schema(
         archived: {
             type: Boolean,
             default: false
-        }
+        },
+
+        // para guardar la url del pdf
+        pdfUrl: {
+            type: String,
+            default: ''
+          }
     },
     {
-        timestamps: true // createdAt, updatedAt
+        timestamps: true 
     }
 );
 

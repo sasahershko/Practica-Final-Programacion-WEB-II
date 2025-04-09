@@ -4,10 +4,13 @@ const {
   createDeliveryNote,
   getAllDeliveryNotes,
   getDeliveryNote,
-  deleteDeliveryNote
+  deleteDeliveryNote,
+  getDeliveryNotePdf,    
+  signDeliveryNote, 
 } = require('../controllers/deliveryNote');
 const { createDeliveryNoteValidator } = require('../validators/deliveryNote');
 const { authMiddleware } = require('../middleware/session');
+const { uploadMiddlewareMemory} = require('../utils/handleStorage');
 
 router.use(authMiddleware);
 
@@ -23,11 +26,11 @@ router.get('/', getAllDeliveryNotes);
 //mostrar un albarán
 router.get('/:id', getDeliveryNote);
 
-//TODO crear y descargar el albarán en pdf
+// crear y descargar el albarán en pdf
+router.get('/pdf/:id', getDeliveryNotePdf);
 
-
-//TODO firmar albarán
-
+// firmar albarán (y opcionalmente)
+router.post('/:id/sign', uploadMiddlewareMemory.single('signature'), signDeliveryNote);
 
 // borrar albarán
 router.delete('/:id', deleteDeliveryNote);

@@ -20,6 +20,7 @@
   "homepage": "https://github.com/sasahershko/Practica-Parcial-Programacion-WEB-II#readme",
   "description": "",
   "dependencies": {
+    "@slack/webhook": "^7.0.5",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
@@ -31,6 +32,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.1",
     "mongoose-delete": "^1.0.2",
+    "morgan-body": "^2.6.9",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.10.0",
     "pdfkit": "^0.16.0"
