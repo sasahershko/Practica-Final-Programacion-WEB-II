@@ -284,7 +284,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwM
   "workdate": "2/1/2024"
 }
 
-###
+###*
 #* -------------------------------------------------------------
 #* 2) GET: Listar albaranes
 #* -------------------------------------------------------------
@@ -327,7 +327,9 @@ Content-Type: image/png
 #* -------------------------------------------------------------
 #* 6) (opcional) Verificar el PDF subido a la cloud
 #* -------------------------------------------------------------
-
+# Una vez firmado, el servidor habrá subido el PDF a IPFS y guardado
+# note.pdfUrl. Para comprobar, repite el 4) GET /pdf/:id y verás
+# si te redirige a la URL en la nube o te muestra algo distinto.
 
 ###
 #* -------------------------------------------------------------
