@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 const dbConnection = async() =>{
-    const db_uri = process.env.DB_URI;
+
+    const db_uri = process.env.NODE_ENV === 'test' ? process.env.DB_URI_TEST : process.env.DB_URI;
     // const db_uri = process.env.DB_URI_TEST;
 
     mongoose.set('strictQuery', false); //para que no salga el warning de que se va a quitar en la siguiente versión
