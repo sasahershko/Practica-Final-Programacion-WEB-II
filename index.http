@@ -272,16 +272,61 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiN
 #* -------------------------------------------------------------
 POST http://localhost:5000/api/deliverynote
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDIyMjYyOSwiZXhwIjoxNzQ0MjI5ODI5fQ.E-c3VhXSso-ME9d4aYQVc6-zBAsD9OXj37btN9Q4f8s
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTI2MTMyMiwiZXhwIjoxNzQ1MjY4NTIyfQ.zqXiO7pk3b9UScR-CYLPq41nGAgJLbMySLPXGK9rj4A
 
 {
   "clientId": "67f56118132ecbe949246382",
   "projectId": "67f571846332151d8bcc575c",
   "format": "materials",
-  "material": "type of material",
-  "hours": 8,
   "description": "my description",
-  "workdate": "2/1/2024"
+  "materials": [
+    {
+      "name": "Cemento",
+      "quantity": 10,
+      "unit": "sacos"
+    },
+    {
+      "name": "Arena",
+      "quantity": 20,
+      "unit": "kg"
+    }
+  ],
+  "date": "2024-02-01"
+}
+###* 1.1)
+
+POST http://localhost:5000/api/deliverynote
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTI2MTMyMiwiZXhwIjoxNzQ1MjY4NTIyfQ.zqXiO7pk3b9UScR-CYLPq41nGAgJLbMySLPXGK9rj4A
+
+{
+  "clientId": "67f56118132ecbe949246382",
+  "projectId": "67f571846332151d8bcc575c",
+  "format": "both",
+  "description": "Instalación completa: montaje + materiales usados",
+  "workers": [
+    {
+      "name": "Juan García",
+      "hours": 5
+    },
+    {
+      "name": "María López",
+      "hours": 4.5
+    }
+  ],
+  "materials": [
+    {
+      "name": "Cemento",
+      "quantity": 10,
+      "unit": "sacos"
+    },
+    {
+      "name": "Arena",
+      "quantity": 20,
+      "unit": "kg"
+    }
+  ],
+  "date": "2024-02-01"
 }
 
 ###*
@@ -323,18 +368,11 @@ Content-Type: image/png
 < ./signatures/firma.png
 --boundary123--
 
-###
-#* -------------------------------------------------------------
-#* 6) (opcional) Verificar el PDF subido a la cloud
-#* -------------------------------------------------------------
-# Una vez firmado, el servidor habrá subido el PDF a IPFS y guardado
-# note.pdfUrl. Para comprobar, repite el 4) GET /pdf/:id y verás
-# si te redirige a la URL en la nube o te muestra algo distinto.
 
 ###
 #* -------------------------------------------------------------
-#* 7) DELETE: Borrar un albarán
+#* 6) DELETE: Borrar un albarán
 #* -------------------------------------------------------------
-DELETE http://localhost:5000/api/deliverynote/67f6b9de4410d160ccaa1dd4
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDIyMjYyOSwiZXhwIjoxNzQ0MjI5ODI5fQ.E-c3VhXSso-ME9d4aYQVc6-zBAsD9OXj37btN9Q4f8s
+DELETE http://localhost:5000/api/deliverynote/680694e15df93f4576dbb11c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTI2MTMyMiwiZXhwIjoxNzQ1MjY4NTIyfQ.zqXiO7pk3b9UScR-CYLPq41nGAgJLbMySLPXGK9rj4A
 

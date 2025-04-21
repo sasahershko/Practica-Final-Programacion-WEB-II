@@ -15,30 +15,30 @@ const { authMiddleware } = require('../middleware/session');
 const { clientValidator } = require('../validators/client'); 
 
 // get clients -> sigo los de swagger
-router.get('/', authMiddleware, getAllClients);
+router.get('/', authMiddleware, getAllClients); 
 
 // add client
-router.post('/', authMiddleware, clientValidator, createClient);
+router.post('/', authMiddleware, clientValidator, createClient); 
 
 // get archived clients of a user
 router.get('/archive', authMiddleware, getArchivedClients);
 
 // get client
-router.get('/:id', authMiddleware, getClientById);
+router.get('/:id', authMiddleware, getClientById); 
 
 // update client
-router.patch('/:id', authMiddleware,clientValidator, updateClient);
+router.patch('/:id', authMiddleware,clientValidator, updateClient); 
 
 // delete client
-router.delete('/:id', authMiddleware, deleteClient);
+router.delete('/:id', authMiddleware, deleteClient); 
 
 //! upload logo and update its url
 
 
 //archiving client
-router.delete('/archive/:id', authMiddleware, archiveClient);
+router.delete('/archive/:id', authMiddleware, archiveClient); 
 
 // restore an archived client
-router.patch('/recover/:id', authMiddleware, recoverClient);
+router.patch('/recover/:id', authMiddleware, recoverClient); 
 
 module.exports = router;

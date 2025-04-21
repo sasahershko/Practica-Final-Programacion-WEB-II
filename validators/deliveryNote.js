@@ -1,6 +1,5 @@
-const { check } = require('express-validator');
+const { check, body } = require('express-validator');
 const validateResults = require('../utils/handleValidator');
-
 
 const createDeliveryNoteValidator = [
   check('clientId')
@@ -17,29 +16,22 @@ const createDeliveryNoteValidator = [
     .bail()
     .isMongoId().withMessage('projectId debe ser un id de Mongo válido'),
 
-
   check('format')
     .exists().withMessage('El campo format es obligatorio')
     .bail()
-    .isIn(['hours', 'materials']).withMessage('format debe ser "hours" o "materials"'),
-
-  //? por ejemplo: si "hours" es obligatorio solo si format === 'hours', lo haríamos con lógica adicional
-  // aquí lo dejamos opcional
-  check('hours')
-    .optional()
-    .isNumeric().withMessage('El campo hours debe ser numérico'),
+    .isIn(['hours', 'materials', 'both']).withMessage('format debe ser "hours", "materials" o "both"'),
 
   check('description')
     .optional()
-    .isString().withMessage('description debe ser texto'),
+    .isString().withMessage('La descripcón debe ser texto'),
 
   check('sign')
     .optional()
-    .isString().withMessage('sign debe ser una cadena'),
+    .isString().withMessage('La firma debe ser una cadena'),
 
   check('pending')
     .optional()
-    .isBoolean().withMessage('pending debe ser boolean'),
+    .isBoolean().withMessage('"pending" debe ser un booleano'),
 
   check('name')
     .optional()
@@ -47,13 +39,49 @@ const createDeliveryNoteValidator = [
 
   check('date')
     .optional()
-    .isISO8601().withMessage('date debe tener un formato de fecha válido (ISO 8601)'),
-
+    .isISO8601().withMessage('La fecha debe tener un formato de fecha válido (ISO 8601)'),
+    
   check('workers')
     .optional()
-    .isArray().withMessage('workers debe ser un array de strings'),
+    .isArray().withMessage('workers debe ser un array'),
 
-    validateResults
+  check('materials')
+    .optional()
+    .isArray().withMessage('materials debe ser un array'),
+
+
+  // según el formato
+  body().custom((body) => {
+    const { format, workers, materials } = body;
+
+    if (format === 'hours' || format === 'both') {
+      //debe haber al menos un trabajador
+      if (!Array.isArray(workers) || workers.length === 0) {
+        throw new Error('Debe incluir al menos un trabajador en workers');
+      }
+      //cada trabajador debe tener name y hours
+      workers.forEach(w => {
+        if (typeof w.name !== 'string' || typeof w.hours !== 'number') {
+          throw new Error('Cada trabajador debe tener name (string) y hours (número)');
+        }
+      });
+    }
+
+    if (format === 'materials' || format === 'both') {
+      if (!Array.isArray(materials) || materials.length === 0) {
+        throw new Error('Debe incluir al menos un material en materials');
+      }
+      materials.forEach(m => {
+        if (typeof m.name !== 'string' || typeof m.quantity !== 'number' || typeof m.unit !== 'string') {
+          throw new Error('Cada material debe tener name (string), quantity (número) y unit (string)');
+        }
+      });
+    }
+
+    return true;
+  }),
+
+  validateResults
 ];
 
 module.exports = {

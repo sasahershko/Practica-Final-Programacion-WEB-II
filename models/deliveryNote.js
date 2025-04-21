@@ -64,7 +64,7 @@ const deliveryNoteSchema = new Schema(
             default: Date.now // o la fecha que se especifique
         },
         project: {
-            type: String, // ej: "0002"
+            type: String, 
             default: ''
         },
         description: {
@@ -74,7 +74,7 @@ const deliveryNoteSchema = new Schema(
 
         format: {
             type: String,
-            enum: ['hours', 'materials'],
+            enum: ['hours', 'materials', 'both'],
             default: 'hours'
         },
 
@@ -82,10 +82,23 @@ const deliveryNoteSchema = new Schema(
             type: Number,
             default: 0
         },
-        workers: {
-            type: [String], // o subdocumentos si necesitas más info
-            default: []
-        },
+
+        workers: [
+            {
+              name: String,
+              hours: Number,
+              _id: false
+            }
+          ],
+
+          materials: [
+            {
+              name: String,
+              quantity: Number,
+              unit: String,
+              _id: false
+            }
+          ],
 
         photo: {
             type: String

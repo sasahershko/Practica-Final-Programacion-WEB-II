@@ -2,7 +2,7 @@
 const supertest = require('supertest');
 const mongoose = require('mongoose');
 
-const { app, server } = require('../app');
+const app  = require('../app');
 const { usersModel } = require('../models');
 
 const { encrypt } = require('../utils/handlePassword');
@@ -25,7 +25,7 @@ beforeAll(async () => {
         mongoose.connection.once('connected', resolve);
     });
 
-    // limpo la colección de usuarios
+    // limpio la colección de usuarios
     await usersModel.deleteMany({});
 
     const hashedPassword = await encrypt(testUserData.password);
@@ -41,9 +41,9 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    server.close();
     await mongoose.connection.close();
-});
+  });
+  
 
 describe('Pruebas para el módulo de Usuarios (/api/user)', () => {
     //
@@ -80,8 +80,8 @@ describe('Pruebas para el módulo de Usuarios (/api/user)', () => {
                 .expect(200)
                 .expect('Content-Type', /application\/json/);
 
-            expect(response.body).toHaveProperty('data');
-            expect(response.body.data).toHaveProperty('email', testUserData.email);
+                expect(response.body).toHaveProperty('user');
+                expect(response.body.user).toHaveProperty('email', testUserData.email);                
         });
 
         it('PATCH /api/user/register => 200 OK y actualiza datos personales', async () => {
@@ -89,11 +89,16 @@ describe('Pruebas para el módulo de Usuarios (/api/user)', () => {
             const response = await api
                 .patch('/api/user/register')
                 .set('Authorization', `Bearer ${token}`)
-                .send({ name: newName, age: 30 })
+                .send({
+                    name: 'Updated User',
+                    surnames: 'Apellido Test',
+                    nif: '12345678Z',
+                    email: testUserData.email 
+                  })                                   
                 .expect(200);
 
-            expect(response.body).toHaveProperty('data');
-            expect(response.body.data).toHaveProperty('name', newName);
+                expect(response.body).toHaveProperty('user');
+                expect(response.body.user).toHaveProperty('name', newName);                
         });
 
         it('DELETE /api/user => 200 OK al borrar la cuenta', async () => {
@@ -103,8 +108,85 @@ describe('Pruebas para el módulo de Usuarios (/api/user)', () => {
                 .expect(200);
 
             expect(response.body).toHaveProperty('message');
-            expect(response.body.message).toMatch(/Usuario eliminado/i);
+            expect(response.body.message).toMatch(/Usuario desactivado/i);
         });
+
+
+        it('PATCH /api/user/company => 200 OK y actualiza la empresa del usuario', async () => {
+            const response = await api
+                .patch('/api/user/company')
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    company: {
+                        name: 'Mi Empresa S.A.',
+                        cif: 'B12345678',
+                        street: 'Gran Vía',
+                        number: 123,
+                        postal: 28013,
+                        city: 'Madrid',
+                        province: 'Madrid'
+                    }
+                })
+                .expect(200);
+        
+            expect(response.body).toHaveProperty('user');
+            expect(response.body.user.company).toHaveProperty('name', 'Mi Empresa S.A.');
+        });
+
+
+        it('POST /api/user/recover => 200 OK si el email existe', async () => {
+            const response = await api
+                .post('/api/user/recover')
+                .send({ email: testUserData.email })
+                .expect(200);
+        
+            expect(response.body).toHaveProperty('message');
+            expect(response.body.message).toMatch(/código enviado/i);
+        });
+
+        it('PUT /api/user/validation => 200 OK si el código es válido', async () => {
+            // actualizamos manualmente el código en BD para el test
+            const user = await usersModel.findOne({ email: testUserData.email });
+            user.code = '654321';
+            await user.save();
+        
+            const response = await api
+                .put('/api/user/validation')
+                .send({ email: testUserData.email, code: '654321' })
+                .expect(200);
+        
+            expect(response.body).toHaveProperty('message');
+            expect(response.body).toHaveProperty('token');
+        });
+        
+        it('POST /api/user/invite => 201 OK e invita a un usuario nuevo', async () => {
+            // primero actualizamos el usuario con una compañía
+            await usersModel.findOneAndUpdate(
+                { email: testUserData.email },
+                {
+                    company: {
+                        name: 'Mi Empresa',
+                        cif: 'B12345678',
+                        street: 'Gran Vía',
+                        number: 123,
+                        postal: 28013,
+                        city: 'Madrid',
+                        province: 'Madrid'
+                    }
+                }
+            );
+        
+            const response = await api
+                .post('/api/user/invite')
+                .set('Authorization', `Bearer ${token}`)
+                .send({ email: 'invitado@example.com' })
+                .expect(201);
+        
+            expect(response.body).toHaveProperty('user');
+            expect(response.body.user.role).toBe('guest');
+        });
+        
+        //! REALIZAR LOGO Y PASSWORD?
 
     });
 });

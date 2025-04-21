@@ -15,9 +15,6 @@ const { uploadMiddlewareMemory} = require('../utils/handleStorage');
 router.use(authMiddleware);
 
 // crear albarán
-//* mirar bien por el tema de: (creo que lo hago ya, pero no estoy segura)
-//*- El albarán creado podrá ser simple (una entrada para las horas realizadas por una persona o un material)
-//*- El albarán creado podrá contener múltiple personas/horar y materiales
 router.post('/', createDeliveryNoteValidator, createDeliveryNote);
 
 // listar albaranes
