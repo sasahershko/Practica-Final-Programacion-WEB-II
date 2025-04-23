@@ -10,98 +10,89 @@ const { generateCodeAndSendEmail } = require('../utils/generateCodeAndSendEmail'
 const { minimalUser } = require('../utils/sanitizers');
 
 const register = async (req, res) => {
-    // extraemos solo los campos validados
-    req = matchedData(req);
-
-    // verificamos si el email ya está en la BBDD
-    const existingUser = await usersModel.findOne({ email: req.email });
-    if (existingUser) {
-        return res.status(409).send({ error: 'Correo ya registrado' });
-    }
-
-    // encriptamos contraseña
-    const passwordHash = await encrypt(req.password);
-
-    const body = { ...req, password: passwordHash };
-    const dataUser = await usersModel.create(body);
-
-    await generateCodeAndSendEmail(dataUser, 'register');
-
-    // preparamos respuesta
-    const data = {
-        token: tokenSign(dataUser),
-        user: minimalUser(dataUser)
-    }
-
-    res.send(data);
-};
-
-const login = async (req, res) => {
     try {
-        req = matchedData(req);
-        const dataUser = await usersModel.findOne({ email: req.email });
-
-
-        if (!dataUser) {
-            return res.status(404).send({ error: 'Usuario no encontrado' });
-        }
-
-        if (!dataUser.active) {
-            return res.status(403).send({ error: 'Usuario desactivado' });
-        }
-
-        if (!dataUser.verified) {
-            return res.status(409).send({ error: 'La cuenta no está verificada.' });
-        }
-
-        if (!await compare(req.password, dataUser.password)) {
-            return res.status(401).send({ error: 'Contraseña inválida' });
-        }
-
-        const data = {
-            token: tokenSign(dataUser),
-            user: minimalUser(dataUser)
-        };
-
-        res.send(data);
-    } catch (error) {
-        console.log(error);
-        return res.status(500).send({ error: 'Error de servidor' });
+      const data = matchedData(req)   
+      const { email, password } = data
+  
+      const existing = await usersModel.findOne({ email })
+      if (existing) {
+        return res.status(409).send({ error: 'Correo ya registrado' })
+      }
+  
+      const passwordHash = await encrypt(password)
+      const newUser = await usersModel.create({ ...data, password: passwordHash })
+  
+      await generateCodeAndSendEmail(newUser, 'register')
+  
+      return res.status(200).send({ 
+        token: tokenSign(newUser),
+        user: minimalUser(newUser)
+      })
+    } catch (err) {
+      console.error(err)
+      return res.status(500).send({ error: 'Error de servidor' })
     }
-};
+  }
 
-const verifyEmail = async (req, res) => {
+  const login = async (req, res) => {
     try {
-        const userId = req.user._id; //por el middleware
-        const { code } = req.body;
-
-        const user = await usersModel.findById(userId);
-
-        if (!user) {
-            return res.status(404).send({ error: 'Usuario no encontrado' });
-        }
-
-        if (user.tries <= 0) {
-            return res.status(400).send({ error: 'Se acabaron los intentos' });
-        }
-
-        if (user.code != code) {
-            user.tries -= 1;
-            await user.save();
-            return res.status(400).send({ error: 'Código inválido' });
-        }
-
-        user.verified = true;
-        await user.save();
-
-
-
-        return res.status(200).send({ message: 'Email verificado con éxito ', user: minimalUser(user) });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).send({ error: 'Error de servidor' });
+      const data = matchedData(req)     // <- aquí también
+      const { email, password } = data
+  
+      const user = await usersModel.findOne({ email })
+      if (!user) {
+        return res.status(404).send({ error: 'Usuario no encontrado' })
+      }
+      if (!user.active) {
+        return res.status(403).send({ error: 'Usuario desactivado' })
+      }
+      if (!user.verified) {
+        return res.status(409).send({ error: 'La cuenta no está verificada.' })
+      }
+      const ok = await compare(password, user.password)
+      if (!ok) {
+        return res.status(401).send({ error: 'Contraseña inválida' })
+      }
+  
+      return res.status(200).send({
+        token: tokenSign(user),
+        user: minimalUser(user)
+      })
+    } catch (err) {
+      console.error(err)
+      return res.status(500).send({ error: 'Error de servidor' })
     }
-}
+  }
+
+  const verifyEmail = async (req, res) => {
+    try {
+      const userId = req.user._id           
+      const { code } = matchedData(req) 
+  
+      const user = await usersModel.findById(userId)
+      if (!user) {
+        return res.status(404).send({ error: 'Usuario no encontrado' })
+      }
+      if (user.tries <= 0) {
+        return res.status(400).send({ error: 'Se acabaron los intentos' })
+      }
+      if (user.code !== code) {
+        user.tries -= 1
+        await user.save()
+        return res.status(400).send({ error: 'Código inválido' })
+      }
+  
+      user.verified = true
+      await user.save()
+      return res.status(200).send({
+        message: 'Email verificado con éxito',
+        user: minimalUser(user)
+      })
+    } catch (err) {
+      console.error(err)
+      return res.status(500).send({ error: 'Error de servidor' })
+    }
+  }
 
 
 module.exports = { login, register, verifyEmail };

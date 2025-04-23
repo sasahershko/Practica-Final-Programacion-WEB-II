@@ -43,23 +43,15 @@ const createProjectValidator = [
     .notEmpty().withMessage('La fecha de fin no puede estar vacía si se incluye'),
 
   // notas
-  check('notes').optional(),
-
-  //? no sé si ponerlo??
-  check('servicePrices')
-    .optional()
-    .isArray().withMessage('servicePrices debe ser un array'),
-  check('servicePrices.*.serviceName')
-    .optional()
-    .notEmpty().withMessage('serviceName no puede estar vacío'),
-  check('servicePrices.*.unitPrice')
-    .optional()
-    .isNumeric().withMessage('unitPrice debe ser numérico'),
-    validateResults
+  check('notes').optional()
 ];
 
 
 const updateProjectValidator = [
+  check('id')
+    .exists().withMessage('El ID del proyecto es requerido')
+    .bail()
+    .isMongoId().withMessage('ID de proyecto inválido'),
   check('name')
     .exists().withMessage('El nombre del proyecto es requerido')
     .bail()
@@ -70,8 +62,8 @@ const updateProjectValidator = [
     .notEmpty().withMessage('clientId no puede estar vacío si se incluye')
     .bail()
     .isMongoId().withMessage('clientId debe ser un id de Mongo válido'),
-  
-  // Resto de campos opcionales
+
+  // resto de campos opcionales
   check('projectCode').optional().notEmpty().withMessage('projectCode no puede ser vacío si se incluye'),
   check('code').optional().notEmpty().withMessage('code no puede estar vacío si se incluye'),
 
@@ -109,10 +101,19 @@ const updateProjectValidator = [
   check('servicePrices.*.unitPrice')
     .optional()
     .isNumeric().withMessage('unitPrice debe ser numérico'),
-    validateResults
+  validateResults
 ];
+
+const validatorIdParam  = [
+  check('id')
+    .exists().withMessage('El ID del proyecto es requerido')
+    .bail()
+    .isMongoId().withMessage('ID de proyecto inválido'),
+  validateResults
+]
 
 module.exports = {
   createProjectValidator,
-  updateProjectValidator
+  updateProjectValidator,
+  validatorIdParam 
 };

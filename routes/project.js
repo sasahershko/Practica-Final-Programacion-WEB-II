@@ -12,7 +12,7 @@ const {
 } = require('../controllers/project');
 
 const { authMiddleware } = require('../middleware/session');
-const { createProjectValidator, updateProjectValidator } = require('../validators/project')
+const { createProjectValidator, updateProjectValidator, validatorIdParam  } = require('../validators/project')
 
 // para que se utilice siempre el authMiddleware
 router.use(authMiddleware);
@@ -32,28 +32,16 @@ router.get('/one/:id', getOneProject);
 //? get archived projects from a client-> de un cliente???
 router.get('/archive', getArchivedProjectsOfUser);
 
-// get projects
-
-
-// get a project
-
-
 // update project
 router.patch('/:id', updateProjectValidator, updateProject);
 
 // delete project
-router.delete('/:id', deleteProject);
+router.delete('/:id', validatorIdParam ,  deleteProject);
 
 // archiving project
-router.delete('/archive/:id', archiveProject);
-
-// activate/deactivate project
-
+router.delete('/archive/:id', validatorIdParam, archiveProject);
 
 //restore an archived project
-router.patch('/recover/:id', recoverProject);
-
-//add unit prices
-
+router.patch('/recover/:id', validatorIdParam, recoverProject);
 
 module.exports = router;

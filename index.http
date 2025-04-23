@@ -3,7 +3,7 @@ POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
 {
-    "email": "linear.skunk.teqe@letterhaven.net",
+    "email": "teqe@letterhaven.net",
     "password": "12345678"
 }
 
@@ -219,7 +219,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiN
 ###* 1.2) PATCH de projecto
 PATCH http://localhost:5000/api/project/67f56f7d214069f766f80b86
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEzNzkzOCwiZXhwIjoxNzQ0MTQ1MTM4fQ.GU1p-QvQer0dM73DdZEjM81kqRXcg2wjqhEI-0wFRFw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTQzNzcxMSwiZXhwIjoxNzQ1NDQ0OTExfQ.AUX7pGiTzKyYDKSRXEkg8iR8QR15laOd2KC1nrOqmgU
 
 {
   "name": "obra",
@@ -244,8 +244,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiN
 
 ###* 2.2) GET de un proyecto específico
 GET http://localhost:5000/api/project/one/67f56f7d214069f766f80b86
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y0MmNiNTdmYWI0ZmFkYzZlYWVlYmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDEzNzkzOCwiZXhwIjoxNzQ0MTQ1MTM4fQ.GU1p-QvQer0dM73DdZEjM81kqRXcg2wjqhEI-0wFRFw
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTQzNzcxMSwiZXhwIjoxNzQ1NDQ0OTExfQ.AUX7pGiTzKyYDKSRXEkg8iR8QR15laOd2KC1nrOqmgU
 
 ###* 3.1) DELETE project (soft) -> archivar
 DELETE http://localhost:5000/api/project/archive/67f572d6f6b774fa67eb1220
@@ -375,4 +374,3 @@ Content-Type: image/png
 #* -------------------------------------------------------------
 DELETE http://localhost:5000/api/deliverynote/680694e15df93f4576dbb11c
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U0M2QwMjJiNjA5MTM0ZWU4OGE4NzMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTI2MTMyMiwiZXhwIjoxNzQ1MjY4NTIyfQ.zqXiO7pk3b9UScR-CYLPq41nGAgJLbMySLPXGK9rj4A
-

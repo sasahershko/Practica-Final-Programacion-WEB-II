@@ -1,6 +1,7 @@
 const { clientsModel } = require('../models');
 const { matchedData } = require('express-validator');
 const { handleHttpError } = require('../utils/handleHttpError');
+const mongoose = require('mongoose'); //para verificar que es un id válido
 
 const getAllClients = async (req, res) => {
     try {
@@ -17,22 +18,24 @@ const getAllClients = async (req, res) => {
 
 
 const getClientById = async (req, res) => {
-    try {
-        const user = req.user;
-        const { id } = req.params;
-
-        const client = await clientsModel.findOne({ _id: id, userId: user._id });
-
-        if (!client) {
-            return res.status(404).send({ message: 'Cliente no encontrado' });
-        }
-
-        return res.status(200).send({ client });
-    } catch (error) {
-        console.error(error);
-        return handleHttpError(res, 'ERROR_GET_CLIENT', 500);
+    const { id } = req.params;
+  
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).send({ error: 'Formato de ID inválido' });
     }
-};
+  
+    try {
+      const user = req.user;
+      const client = await clientsModel.findOne({ _id: id, userId: user._id });
+      if (!client) {
+        return res.status(404).send({ message: 'Cliente no encontrado' });
+      }
+      return res.status(200).send({ client });
+    } catch (error) {
+      console.error(error);
+      return handleHttpError(res, 'ERROR_GET_CLIENT', 500);
+    }
+  };
 
 
 const createClient = async (req, res) => {

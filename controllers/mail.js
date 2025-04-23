@@ -8,8 +8,8 @@ const send = async(req, res) =>{
         const data = await sendEmail(info);
         res.status(200).send({message: 'Correo enviado correctamente'});
     } catch (error) {
-        // handleHttpError(res, 'ERROR_SEND_EMAIL');
-        console.log(error);
+        handleHttpError(res, 'ERROR_SEND_EMAIL', 500);
+        // console.log(error);
     }
 }
 

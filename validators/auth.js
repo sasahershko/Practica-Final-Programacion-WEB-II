@@ -32,9 +32,15 @@ const validatorLogin = [
         .exists().withMessage('Contraseña requerida')
         .bail()
         .notEmpty().withMessage('Contraseña no puede estar vacía'),
-    (req, res, next) => {
-        return validateResults(req, res, next)
-    }
+        validateResults
 ];
 
-module.exports = { validatorRegister, validatorLogin }
+const validatorVerifyEmail = [
+    check('code')
+      .exists().withMessage('El código es requerido')
+      .bail()
+      .notEmpty().withMessage('El código no puede estar vacío'),
+    validateResults
+  ]
+
+module.exports = { validatorRegister, validatorLogin , validatorVerifyEmail}

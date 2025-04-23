@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const dbConnection = async() =>{
 
     const db_uri = process.env.NODE_ENV === 'test' ? process.env.DB_URI_TEST : process.env.DB_URI;
-    // const db_uri = process.env.DB_URI_TEST;
 
     mongoose.set('strictQuery', false); //para que no salga el warning de que se va a quitar en la siguiente versión
 
@@ -14,7 +13,11 @@ const dbConnection = async() =>{
         console.error('Error de conexión a la base de datos', e);
     }
 
-    mongoose.connection.on("connected", () => console.log("Conectado a la BD"))
+    mongoose.connection.on("connected", () => {
+        if (process.env.NODE_ENV !== 'test') {
+            console.log("Conectado a la BD")
+        }
+    });
 }
 
 
