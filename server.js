@@ -9,4 +9,5 @@ const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
   console.log(`Servidor escuchando en puerto ${port}`);
+  console.log(`Documentación Swagger en http://localhost:${port}/api-docs`);
 });
