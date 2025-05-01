@@ -5,24 +5,24 @@ const mongoose = require('mongoose');
 const UserScheme = new mongoose.Schema({
     name: { type: String, default: '' },
     surnames: { type: String, default: '' },
-    nif: { type: String, default: ''  },
+    nif: { type: String, default: '' },
     email: { type: String, unique: true },
     password: { type: String },
     tries: { type: Number, default: 3 },
     role: { type: String, enum: ['admin', 'user', 'guest'], default: 'user' },
     verified: { type: Boolean, default: false },
-    active: { type: Boolean, default: true}, //si se desactiva, estaría en soft delete
+    active: { type: Boolean, default: true }, //si se desactiva, estaría en soft delete
     code: { type: String },
-    company: {
-        name: { type: String, default: '' },
-        cif: { type: String, default: '' },
+    company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
+    logo: { type: String, default: '' },
+    isFreelancer: { type: Boolean, default: false },
+    address: {
         street: { type: String, default: '' },
         number: { type: Number, default: null },
         postal: { type: Number, default: null },
         city: { type: String, default: '' },
-        province: { type: String, default: '' },
-    },
-    logo: {type: String, default: ''},
+        province: { type: String, default: '' }
+    }
 },
     {
         timestamps: true,

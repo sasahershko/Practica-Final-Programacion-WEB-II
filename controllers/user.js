@@ -1,4 +1,4 @@
-const { usersModel } = require('../models');
+const { usersModel, companyModel } = require('../models');
 const { handleHttpError } = require('../utils/handleHttpError');
 const { matchedData } = require('express-validator');
 const { uploadToPinata } = require('../utils/handleUploadIPFS');
@@ -34,9 +34,14 @@ const patchUserCompany = async (req, res) => {
         const user = req.user;
         const { company } = matchedData(req);
 
-        user.company = { ...company };
+        // creo nueva compañía
+        const newCompany = new companyModel(company);
+        await newCompany.save();
+
+        user.company = newCompany._id;
 
         await user.save();
+        await user.populate('company');
 
         return res.status(200).send({ message: 'Compañía actualizada con éxito', user: sanitizeUser(user) });
     } catch (error) {
@@ -44,7 +49,6 @@ const patchUserCompany = async (req, res) => {
         return res.status(500).send({ error: 'Internal error' });
     }
 };
-
 
 const updateUserLogo = async (req, res) => {
     try {
@@ -74,10 +78,10 @@ const updateUserLogo = async (req, res) => {
     }
 };
 
-//* FUNCIONALIDADES EXTRA
+
 const getUser = async (req, res) => {
     try {
-        const user = req.user;
+        const user = await usersModel.findById(req.user._id).populate('company');
 
         return res.status(200).send({ user: sanitizeUser(user) });
     } catch (error) {
@@ -187,12 +191,12 @@ const inviteUser = async (req, res) => {
                 password: undefined,
                 role: 'guest',
                 company: inviter.company,
-              });
-              
-              await userToInvite.save();
-              
-              await generateCodeAndSendEmail(userToInvite, 'invite');
-              
+            });
+
+            await userToInvite.save();
+
+            await generateCodeAndSendEmail(userToInvite, 'invite');
+
 
             return res.status(201).send({
                 message: 'Usuario creado e invitado con éxito',

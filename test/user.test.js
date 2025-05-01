@@ -3,72 +3,70 @@ jest.mock('../utils/generateCodeAndSendEmail', () => ({
     generateCodeAndSendEmail: jest.fn().mockResolvedValue()
   }));
   
-  const supertest    = require('supertest');
-  const mongoose     = require('mongoose');
-  const app          = require('../app');
-  const { usersModel } = require('../models');
-  const { encrypt }    = require('../utils/handlePassword');
-  const { tokenSign }  = require('../utils/handleJwt');
+  const supertest = require('supertest');
+  const app = require('../app');
+  const { usersModel, companyModel } = require('../models');
+  const { encrypt }  = require('../utils/handlePassword');
+  const { tokenSign } = require('../utils/handleJwt');
   
   const api = supertest(app);
   
   let primaryUser, primaryToken;
   let recoverUser;
   let inviterUser, inviterToken;
+  let inviterCompany;
   
   beforeAll(async () => {
     // jest.spyOn(console, 'error').mockImplementation(() => {});
     await usersModel.deleteMany({});
-  
+    await companyModel.deleteMany({}); // limpia compañías
+
     // usuario principal
     const h1 = await encrypt('password123');
     primaryUser = await usersModel.create({
-      email:    'primary@test.com',
+      email: 'primary@test.com',
       password: h1,
-      name:     'Primario',
+      name: 'Primario',
       surnames: 'Usuario',
-      nif:      'A12345678',
+      nif: 'A12345678',
       verified: true,
-      active:   true
+      active: true
     });
     primaryToken = tokenSign(primaryUser);
-  
+
     // usuario para recuperar contraseña
     const h2 = await encrypt('resetpass');
     recoverUser = await usersModel.create({
-      email:    'recover@test.com',
+      email:'recover@test.com',
       password: h2,
       verified: true,
-      active:   true
+      active: true
     });
     await usersModel.findByIdAndUpdate(recoverUser._id, {
       code:  '111111',
       tries: 1
     });
-  
+
     // invitador con compañía
     const h3 = await encrypt('invitepass');
+    const inviterCompany = await companyModel.create({
+      name:     'Org',
+      cif:      'B87654321',
+      street:   'Calle X',
+      number:   1,
+      postal:   28001,
+      city:     'Madrid',
+      province: 'Madrid'
+    });
     inviterUser = await usersModel.create({
       email:    'inviter@test.com',
       password: h3,
       verified: true,
       active:   true,
-      company: {
-        name:     'Org',
-        cif:      'B87654321',
-        street:   'Calle X',
-        number:   1,
-        postal:   28001,
-        city:     'Madrid',
-        province: 'Madrid'
-      }
+      company:  inviterCompany._id
     });
     inviterToken = tokenSign(inviterUser);
   });
-  
-  // afterAll(async () => {
-  //   console.error.mockRestore();
-  // });
   
   describe('Pruebas del módulo de Usuarios (/api/user) – happy path', () => {
     it('GET /api/user → 200 y usuario sanitizado', async () => {
@@ -174,6 +172,8 @@ jest.mock('../utils/generateCodeAndSendEmail', () => ({
     let errUser, errToken;
     beforeAll(async () => {
       await usersModel.deleteMany({});
+      await companyModel.deleteMany({}); // limpia también compañías
+
       // usuario para payload inválido
       const hErr = await encrypt('password123');
       errUser = await usersModel.create({
@@ -186,31 +186,34 @@ jest.mock('../utils/generateCodeAndSendEmail', () => ({
         active:   true
       });
       errToken = tokenSign(errUser);
+
       // recrear invitador con compañía
       const hInv = await encrypt('invitepass');
+      const inviterCompany = await companyModel.create({
+        name:     'Org',
+        cif:      'B87654321',
+        street:   'Calle X',
+        number:   1,
+        postal:   28001,
+        city:     'Madrid',
+        province: 'Madrid'
+      });
       inviterUser = await usersModel.create({
         email:    'inviter@test.com',
         password: hInv,
         verified: true,
         active:   true,
-        company: {
-          name:     'Org',
-          cif:      'B87654321',
-          street:   'Calle X',
-          number:   1,
-          postal:   28001,
-          city:     'Madrid',
-          province: 'Madrid'
-        }
+        company:  inviterCompany._id
       });
       inviterToken = tokenSign(inviterUser);
+
       // crear guest para "ya invitado"
       await api
         .post('/api/user/invite')
         .set('Authorization', `Bearer ${inviterToken}`)
         .send({ email: 'guest@test.com' });
     });
-  
+
     it('GET /api/user sin token → 401', () =>
       api.get('/api/user').expect(401)
     );
