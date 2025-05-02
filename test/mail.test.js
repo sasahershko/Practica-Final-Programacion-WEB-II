@@ -3,13 +3,13 @@ jest.mock('../utils/handleEmail', () => ({
     sendEmail: jest.fn().mockResolvedValue({})
   }));
   
-  const supertest    = require('supertest');
-  const mongoose     = require('mongoose');
-  const app          = require('../app');
+  const supertest = require('supertest');
+  const mongoose = require('mongoose');
+  const app = require('../app');
   const { usersModel } = require('../models');
-  const { encrypt }    = require('../utils/handlePassword');
-  const { tokenSign }  = require('../utils/handleJwt');
-  const { sendEmail }  = require('../utils/handleEmail');
+  const { encrypt } = require('../utils/handlePassword');
+  const { tokenSign } = require('../utils/handleJwt');
+  const { sendEmail } = require('../utils/handleEmail');
   
   const api = supertest(app);
   let user, token;

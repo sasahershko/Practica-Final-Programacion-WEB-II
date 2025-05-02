@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const {validatorPersonalData, validatorCompanyData} = require('../validators/user');
-const {patchUserRegister, patchUserCompany, updateUserLogo, getUser, deleteUser, requestPasswordReset,verifyResetCode, resetPassword, inviteUser } = require('../controllers/user');
+const {validatorPersonalData, validatorCompanyData, validatorAddress} = require('../validators/user');
+const {patchUserRegister, patchUserCompany, patchUserAddress, updateUserLogo, getUser, deleteUser, requestPasswordReset,verifyResetCode, resetPassword, inviteUser } = require('../controllers/user');
 //LOGO
 const { uploadMiddlewareMemory} = require('../utils/handleStorage');
 
@@ -150,10 +150,10 @@ router.patch('/register', authMiddleware, validatorPersonalData, patchUserRegist
 
 /**
  * @swagger
- * /api/user/company:
+ * /api/user/address:
  *   patch:
- *     summary: Update company information of the authenticated user
- *     description: Updates the company details associated with the authenticated user. All fields are required and validated.
+ *     summary: Actualizar dirección del usuario
+ *     description: Actualiza la dirección del usuario. Si el usuario es autónomo, todos los campos son obligatorios.
  *     tags: [User]
  *     security:
  *       - bearerAuth: []
@@ -163,8 +163,68 @@ router.patch('/register', authMiddleware, validatorPersonalData, patchUserRegist
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - company
+ *             properties:
+ *               address:
+ *                 type: object
+ *                 required: [street, number, postal, city, province]
+ *                 properties:
+ *                   street:
+ *                     type: string
+ *                     example: Calle Falsa
+ *                   number:
+ *                     type: integer
+ *                     example: 123
+ *                   postal:
+ *                     type: integer
+ *                     example: 28080
+ *                   city:
+ *                     type: string
+ *                     example: Madrid
+ *                   province:
+ *                     type: string
+ *                     example: Madrid
+ *     responses:
+ *       200:
+ *         description: Dirección actualizada con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Dirección actualizada con éxito
+ *               address:
+ *                 street: Calle Falsa
+ *                 number: 123
+ *                 postal: 28080
+ *                 city: Madrid
+ *                 province: Madrid
+ *       400:
+ *         description: Error de validación
+ *       401:
+ *         description: Token inválido o no enviado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.patch('/address', authMiddleware, validatorAddress, patchUserAddress);
+
+/**
+ * @swagger
+ * /api/user/company:
+ *   patch:
+ *     summary: Actualizar los datos de la compañía del usuario
+ *     description: >
+ *       Si el usuario es autónomo (`isFreelancer: true`), **no es necesario enviar ningún dato**. 
+ *       Se generará automáticamente una compañía usando su nombre, apellidos, NIF y dirección personal. 
+ *       En ese caso, la dirección debe haberse completado previamente mediante `PATCH /api/user/address`.  
+ *       
+ *       Si el usuario **no es autónomo**, debe enviar todos los campos requeridos del objeto `company`.
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
  *             properties:
  *               company:
  *                 type: object
@@ -200,7 +260,7 @@ router.patch('/register', authMiddleware, validatorPersonalData, patchUserRegist
  *                     example: Madrid
  *     responses:
  *       200:
- *         description: Company updated successfully
+ *         description: Compañía actualizada con éxito
  *         content:
  *           application/json:
  *             schema:
@@ -212,11 +272,25 @@ router.patch('/register', authMiddleware, validatorPersonalData, patchUserRegist
  *                 user:
  *                   $ref: '#/components/schemas/User'
  *       400:
- *         description: Validation error
+ *         description: Error de validación o falta de dirección personal en autónomos
+ *         content:
+ *           application/json:
+ *             examples:
+ *               freelancerMissingAddress:
+ *                 summary: Autónomo sin dirección personal completa
+ *                 value:
+ *                   error: Faltan campos de dirección personal: street, city, ...
+ *               invalidCompanyData:
+ *                 summary: Empresa sin datos de compañía
+ *                 value:
+ *                   errors:
+ *                     - msg: El nombre de la empresa es requerido
+ *                       param: company.name
+ *                       location: body
  *       401:
- *         description: Unauthorized - missing or invalid token
+ *         description: Token inválido o no enviado
  *       500:
- *         description: Internal server error
+ *         description: Error interno del servidor
  */
 router.patch('/company', authMiddleware, validatorCompanyData, patchUserCompany );
 

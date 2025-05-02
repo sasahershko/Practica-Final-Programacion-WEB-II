@@ -2,7 +2,6 @@ const { usersModel, companyModel } = require('../models');
 const { handleHttpError } = require('../utils/handleHttpError');
 const { matchedData } = require('express-validator');
 const { uploadToPinata } = require('../utils/handleUploadIPFS');
-const { sendEmail } = require('../utils/handleEmail');
 const { generateCodeAndSendEmail } = require('../utils/generateCodeAndSendEmail');
 
 
@@ -18,6 +17,14 @@ const patchUserRegister = async (req, res) => {
         const data = matchedData(req);
         const userId = req.user._id;
 
+        if (data.email) {
+            const existingUser = await usersModel.findOne({ email: data.email });
+
+            if (existingUser && existingUser._id.toString() !== userId.toString()) {
+                return res.status(409).send({ error: 'El correo electrónico ya está en uso por otro usuario' });
+            }
+        }
+
         const updatedUser = await usersModel.findByIdAndUpdate(userId, data, { new: true });
 
         return res.status(200).send({ message: 'Usuario editado con éxito', user: sanitizeUser(updatedUser) });
@@ -27,29 +34,63 @@ const patchUserRegister = async (req, res) => {
     }
 };
 
-
-
-const patchUserCompany = async (req, res) => {
+const patchUserAddress = async (req, res) => {
     try {
         const user = req.user;
-        const { company } = matchedData(req);
+        const { address } = matchedData(req);
 
-        // creo nueva compañía
-        const newCompany = new companyModel(company);
-        await newCompany.save();
-
-        user.company = newCompany._id;
-
+        user.address = address;
         await user.save();
-        await user.populate('company');
 
-        return res.status(200).send({ message: 'Compañía actualizada con éxito', user: sanitizeUser(user) });
+        return res.status(200).send({ message: 'Dirección actualizada con éxito', address: user.address });
     } catch (error) {
-        console.error('Error en patchUserCompany:', error);
+        console.error('Error en patchUserAddress:', error);
         return res.status(500).send({ error: 'Internal error' });
     }
 };
 
+const patchUserCompany = async (req, res) => {
+    try {
+      const user = req.user;
+      let { company } = matchedData(req);
+  
+      if (user.isFreelancer) {
+        const address = user.address || {};
+  
+        const requiredFields = ['street', 'number', 'postal', 'city', 'province'];
+        const missingFields = requiredFields.filter(field => !address[field]);
+  
+        if (missingFields.length > 0) {
+          return res.status(400).send({
+            error: `Faltan campos de dirección personal: ${missingFields.join(', ')}`
+          });
+        }
+  
+        company = {
+          name: `${user.name} ${user.surnames}`,
+          cif: user.nif,
+          street: address.street,
+          number: address.number,
+          postal: address.postal,
+          city: address.city,
+          province: address.province,
+          isFreelancer: true
+        };
+      }
+  
+      const newCompany = new companyModel(company);
+      await newCompany.save();
+  
+      user.company = newCompany._id;
+      await user.save();
+      await user.populate('company');
+  
+      return res.status(200).send({ message: 'Compañía actualizada con éxito', user: sanitizeUser(user) });
+    } catch (error) {
+      console.error('Error en patchUserCompany:', error);
+      return res.status(500).send({ error: 'Internal error' });
+    }
+  };
 const updateUserLogo = async (req, res) => {
     try {
         const file = req.file;
@@ -242,4 +283,4 @@ const inviteUser = async (req, res) => {
 
 
 
-module.exports = { getUser, deleteUser, patchUserRegister, patchUserCompany, updateUserLogo, requestPasswordReset, verifyResetCode, resetPassword, inviteUser };
+module.exports = { getUser, deleteUser, patchUserRegister, patchUserAddress, patchUserCompany, updateUserLogo, requestPasswordReset, verifyResetCode, resetPassword, inviteUser };

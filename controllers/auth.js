@@ -3,7 +3,7 @@ const { matchedData } = require('express-validator');
 const { encrypt, compare } = require('../utils/handlePassword');
 const { usersModel } = require('../models');
 const { tokenSign, verifyToken } = require('../utils/handleJwt');
-const { sendEmail } = require('../utils/handleEmail');
+//const { sendEmail } = require('../utils/handleEmail');
 const { generateCodeAndSendEmail } = require('../utils/generateCodeAndSendEmail');
 
 //para que no devuelva ciertos campos
