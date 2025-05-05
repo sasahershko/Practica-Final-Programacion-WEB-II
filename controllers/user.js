@@ -30,7 +30,7 @@ const patchUserRegister = async (req, res) => {
         return res.status(200).send({ message: 'Usuario editado con éxito', user: sanitizeUser(updatedUser) });
     } catch (error) {
         console.log(error);
-        return res.status(500).send({ error: 'Internal error' });
+        return handleHttpError(res, 'ERROR_PATCH_USER_REGISTER', 500);
     }
 };
 
@@ -45,7 +45,7 @@ const patchUserAddress = async (req, res) => {
         return res.status(200).send({ message: 'Dirección actualizada con éxito', address: user.address });
     } catch (error) {
         console.error('Error en patchUserAddress:', error);
-        return res.status(500).send({ error: 'Internal error' });
+        return handleHttpError(res, 'ERROR_PATCH_USER_ADDRESS', 500);
     }
 };
 
@@ -56,7 +56,7 @@ const patchUserCompany = async (req, res) => {
   
       if (user.isFreelancer) {
         const address = user.address || {};
-  
+
         const requiredFields = ['street', 'number', 'postal', 'city', 'province'];
         const missingFields = requiredFields.filter(field => !address[field]);
   
@@ -87,10 +87,12 @@ const patchUserCompany = async (req, res) => {
   
       return res.status(200).send({ message: 'Compañía actualizada con éxito', user: sanitizeUser(user) });
     } catch (error) {
-      console.error('Error en patchUserCompany:', error);
-      return res.status(500).send({ error: 'Internal error' });
+        console.error('Error en patchUserCompany:', error);
+        return handleHttpError(res, 'ERROR_PATCH_USER_COMPANY', 500);
     }
   };
+
+
 const updateUserLogo = async (req, res) => {
     try {
         const file = req.file;
@@ -115,7 +117,7 @@ const updateUserLogo = async (req, res) => {
         res.json({ message: 'Logo actualizado correctamente', logo: user.logo });
     } catch (error) {
         console.error(error);
-        res.status(500).send({ error: 'ERROR_UPDATING_LOGO' });
+        return handleHttpError(res, 'ERROR_UPDATING_LOGO', 500);
     }
 };
 
@@ -127,7 +129,7 @@ const getUser = async (req, res) => {
         return res.status(200).send({ user: sanitizeUser(user) });
     } catch (error) {
         console.log(error);
-        return res.status(500).send({ error: 'Error del servidor' });
+        return handleHttpError(res, 'ERROR_GET_USER', 500);
     }
 }
 
@@ -146,7 +148,7 @@ const deleteUser = async (req, res) => {
         }
     } catch (error) {
         console.error(error);
-        return res.status(500).send({ error: 'Error al eliminar el usuario' });
+        return handleHttpError(res, 'ERROR_DELETE_USER', 500);
     }
 };
 
@@ -165,7 +167,8 @@ const requestPasswordReset = async (req, res) => {
 
         return res.status(200).send({ message: 'Código enviado' });
     } catch (error) {
-        return res.status(500).send({ error: 'Error al generar código' });
+        console.error(error);
+        return handleHttpError(res, 'ERROR_GENERATE_RESET_CODE', 500);
     }
 };
 
@@ -187,7 +190,7 @@ const verifyResetCode = async (req, res) => {
         return res.status(200).send({ message: 'Código verificado ', token });
     } catch (error) {
         console.log(error);
-        return res.status(500).send({ error: 'Error al verificar código' });
+        return handleHttpError(res, 'ERROR_VERIFY_RESET_CODE', 500);
     }
 }
 
@@ -211,7 +214,7 @@ const resetPassword = async (req, res) => {
 
         res.status(200).send({ message: 'Contraseña cambiada con éxito' });
     } catch (error) {
-        res.status(500).send({ message: 'Error de servidor' });
+        return handleHttpError(res, 'ERROR_RESET_PASSWORD', 500);
     }
 }
 
@@ -277,7 +280,7 @@ const inviteUser = async (req, res) => {
         });
     } catch (error) {
         console.error('Error al invitar usuario:', error);
-        return res.status(500).send({ error: 'Error al invitar al usuario' });
+        return handleHttpError(res, 'ERROR_INVITE_USER', 500);
     }
 };
 

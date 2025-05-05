@@ -98,7 +98,6 @@ const generatePDFBuffer = (deliveryNote) => {
     doc.fontSize(14).font('Helvetica-Bold').text('Datos generales');
     doc.moveDown(0.5);
 
-    //! ME ESTÁ DANDO NULL
     doc.fontSize(12).font('Helvetica')
       .text(`Fecha: ${deliveryNote.date?.toLocaleDateString() || 'N/A'}`)
       .text(`Usuario: ${deliveryNote.userId?.email || 'N/A'}`)

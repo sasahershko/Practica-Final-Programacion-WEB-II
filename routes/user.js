@@ -279,7 +279,7 @@ router.patch('/address', authMiddleware, validatorAddress, patchUserAddress);
  *               freelancerMissingAddress:
  *                 summary: Autónomo sin dirección personal completa
  *                 value:
- *                   error: Faltan campos de dirección personal: street, city, ...
+ *                   error: "Faltan campos de dirección personal: street, city, ..."
  *               invalidCompanyData:
  *                 summary: Empresa sin datos de compañía
  *                 value:

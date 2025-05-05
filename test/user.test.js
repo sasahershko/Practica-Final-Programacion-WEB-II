@@ -166,6 +166,45 @@ jest.mock('../utils/generateCodeAndSendEmail', () => ({
       const u = await usersModel.findById(primaryUser._id);
       expect(u).toBeNull();
     });
+
+    it('PATCH /api/user/company (autónomo) → 200 y crea empresa con sus datos', async () => {
+      const freelancerUser = await usersModel.create({
+        email: 'freelancer@test.com',
+        password: await encrypt('freelancepass'),
+        name: 'Freddy',
+        surnames: 'Lancer',
+        nif: 'Z12345678',
+        verified: true,
+        active: true,
+        isFreelancer: true,
+        address: {
+          street: 'Calle Freelance',
+          number: 99,
+          postal: 28000,
+          city: 'Madrid',
+          province: 'Madrid'
+        }
+      });
+
+      const freelancerToken = tokenSign(freelancerUser);
+
+      const res = await api
+          .patch('/api/user/company')
+          .set('Authorization', `Bearer ${freelancerToken}`)
+          .send() // no se envía body
+          .expect(200);
+
+      expect(res.body.user.company).toMatchObject({
+        name: 'Freddy Lancer',
+        cif: 'Z12345678',
+        street: 'Calle Freelance',
+        number: 99,
+        postal: 28000,
+        city: 'Madrid',
+        province: 'Madrid'
+      });
+    });
+
   });
   
   describe('Pruebas de errores en el módulo de Usuarios (/api/user)', () => {
@@ -294,5 +333,33 @@ jest.mock('../utils/generateCodeAndSendEmail', () => ({
     it('DELETE /api/user sin token → 401', () =>
       api.delete('/api/user').expect(401)
     );
+
+    it('PATCH /api/user/company (autónomo sin dirección) → 400', async () => {
+      const brokenFreelancer = await usersModel.create({
+        email: 'broken@test.com',
+        password: await encrypt('failpass'),
+        name: 'Incompleto',
+        surnames: 'Autónomo',
+        nif: 'Z87654321',
+        verified: true,
+        active: true,
+        isFreelancer: true,
+        address: {
+          street: 'Calle Incompleta'
+          // faltan number, postal, city, province
+        }
+      });
+
+      const token = tokenSign(brokenFreelancer);
+
+      const res = await api
+          .patch('/api/user/company')
+          .set('Authorization', `Bearer ${token}`)
+          .send()
+          .expect(400);
+
+      expect(res.body.error).toMatch(/faltan campos de dirección/i);
+    });
+
   });
   

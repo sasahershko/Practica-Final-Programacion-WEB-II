@@ -110,7 +110,7 @@ const deliveryNoteSchema = new Schema(
         },
 
 
-        // para saber si está pendiente, firmado, etc
+        // para saber si está pendiente, firmado
         pending: {
             type: Boolean,
             default: true

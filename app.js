@@ -17,10 +17,12 @@ const dbConnect = require('./config/mongodb');
 dbConnect();
 
 const app = express();
+
+
 morganBody(app, {
     noColors: true,
     skip: function(req, res){
-        return res.statusCode >= 500
+        return res.statusCode < 500
     },
     stream: loggerStream
 });
